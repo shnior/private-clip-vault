@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ניהול | שניאור אייזנבך</title>
+    <style>
+        body { font-family: sans-serif; background: #070709; color: white; padding: 50px; text-align: center; }
+        .panel { background: #151515; padding: 30px; border-radius: 15px; border: 1px solid #D4AF37; max-width: 500px; margin: 0 auto; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #7a1528; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #D4AF37; color: black; }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h2 style="color:#D4AF37">הוספת פרויקט חדש</h2>
+        <form id="addForm">
+            <input type="text" id="name" placeholder="שם הפרויקט" required>
+            <input type="text" id="role" placeholder="תפקיד (למשל: הנפשה)" required>
+            <input type="text" id="img" placeholder="קישור לתמונה (URL)">
+            <input type="text" id="yt" placeholder="קישור מיוטיוב">
+            <button type="submit">שמור ופרסם באתר</button>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
+            authDomain: "shnior-studio.firebaseapp.com",
+            projectId: "shnior-studio",
+            storageBucket: "shnior-studio.firebasestorage.app",
+            messagingSenderId: "163064507259",
+            appId: "1:163064507259:web:3fb46c6795eba5b84f6bde"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        db.settings({ experimentalForceLongPolling: true });
+
+        document.getElementById('addForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let ytId = "";
+            let url = document.getElementById('yt').value;
+            if(url.includes("v=")) ytId = url.split("v=")[1].split("&")[0];
+            else if(url.includes("be/")) ytId = url.split("be/")[1].split("?")[0];
+
+            db.collection("projects").add({
+                name: document.getElementById('name').value,
+                role: document.getElementById('role').value,
+                image: document.getElementById('img').value || "https://via.placeholder.com/400",
+                youtubeId: ytId,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => { alert("נשמר בהצלחה!"); location.reload(); });
+        });
+    </script>
+</body>
+</html>
