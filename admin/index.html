@@ -12,11 +12,15 @@
     .section { background: #1a0f12; padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #7a1528; }
     label { display: block; margin: 12px 0 6px; font-weight: bold; color: #D4AF37; }
     input, textarea { width: 100%; padding: 12px; background: #111; border: 1px solid #7a1528; color: white; border-radius: 8px; }
-    button { background: #7a1528; color: white; padding: 16px 40px; font-size: 1.1rem; border: none; border-radius: 8px; cursor: pointer; margin: 10px 0; width: 100%; }
+    button { background: #7a1528; color: white; padding: 16px 40px; font-size: 1.1rem; border: none; border-radius: 8px; cursor: pointer; margin: 10px 0; }
     button:hover { background: #D4AF37; color: black; }
     .portfolio-item { border: 1px solid #7a1528; padding: 15px; margin: 15px 0; border-radius: 8px; background: #14090d; }
     .success { color: #4CAF50; }
     #status { text-align: center; font-size: 1.2rem; margin: 20px 0; }
+    .btn-delete { background: #c00; width: auto; margin-top: 10px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; }
+    .section-header h2 { margin: 0; }
+    .add-button { background: #D4AF37; color: black; }
   </style>
 </head>
 <body>
@@ -24,7 +28,9 @@
 
   <!-- Hero -->
   <div class="section">
-    <h2>לוגו & Hero Section</h2>
+    <div class="section-header">
+      <h2>לוגו & Hero Section</h2>
+    </div>
     <label>טקסט לוגו</label>
     <input type="text" id="logoText">
     <label>כותרת ראשית (H1)</label>
@@ -35,7 +41,9 @@
 
   <!-- Services -->
   <div class="section">
-    <h2>שירותים</h2>
+    <div class="section-header">
+      <h2>שירותים</h2>
+    </div>
     <label>שירות 1 - כותרת</label>
     <input type="text" id="s1_title">
     <label>שירות 1 - תיאור</label>
@@ -54,9 +62,11 @@
 
   <!-- Portfolio -->
   <div class="section">
-    <h2>תיק עבודות - פרויקטים</h2>
+    <div class="section-header">
+      <h2>תיק עבודות - פרויקטים</h2>
+      <button class="add-button" onclick="addPortfolioItem()">➕ הוסף פרויקט חדש</button>
+    </div>
     <div id="portfolioContainer"></div>
-    <button onclick="addPortfolioItem()">➕ הוסף פרויקט חדש</button>
   </div>
 
   <button onclick="saveAllContent()">💾 שמור את כל השינויים</button>
@@ -91,7 +101,7 @@
           <label>קישור ליוטיוב</label>
           <input type="text" value="${item.youtube || ''}" onchange="portfolioItems[${i}].youtube = this.value" placeholder="https://www.youtube.com/watch?v=...">
 
-          <button onclick="deletePortfolioItem(${i})" style="background:#c00; width:auto; margin-top:10px;">🗑 מחק פרויקט</button>
+          <button class="btn-delete" onclick="deletePortfolioItem(${i})">🗑 מחק פרויקט</button>
         `;
         container.appendChild(div);
       });
