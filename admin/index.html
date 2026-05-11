@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ניהול תוכן | Shnior Eisenbach</title>
     
-    <!-- פונטים וספריות חיצוניות -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
@@ -23,164 +22,24 @@
             --border: #333;
         }
 
-        body { 
-            font-family: 'Google Sans', sans-serif; 
-            background: var(--bg-dark); 
-            color: var(--text-main); 
-            padding: 40px 20px; 
-            line-height: 1.6;
-            margin: 0;
-        }
+        body { font-family: 'Google Sans', sans-serif; background: var(--bg-dark); color: var(--text-main); padding: 40px 20px; line-height: 1.6; margin: 0; direction: rtl; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: var(--primary); text-align: center; font-size: 2.5rem; margin-bottom: 40px; }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        h1 { 
-            color: var(--primary); 
-            text-align: center; 
-            font-weight: 700;
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .section { 
-            background: var(--card-bg); 
-            padding: 30px; 
-            border-radius: 16px; 
-            margin-bottom: 30px; 
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
-        }
-
-        .section-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
+        .section { background: var(--card-bg); padding: 30px; border-radius: 16px; margin-bottom: 30px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
         .section-header h2 { margin: 0; font-size: 1.5rem; color: var(--primary); }
 
-        label { 
-            display: block; 
-            margin: 15px 0 8px; 
-            font-weight: 500; 
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        input, textarea { 
-            width: 100%; 
-            padding: 12px 15px; 
-            background: var(--input-bg); 
-            border: 1px solid var(--border); 
-            color: white; 
-            border-radius: 8px; 
-            font-family: inherit;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .btn { 
-            background: var(--primary); 
-            color: #000; 
-            padding: 12px 25px; 
-            font-size: 1rem; 
-            font-weight: 700;
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn:hover { 
-            background: var(--primary-dark); 
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-delete { 
-            background: #ff4d4d22; 
-            color: #ff4d4d; 
-            border: 1px solid #ff4d4d;
-            padding: 8px 15px;
-            font-size: 0.85rem;
-        }
-
+        label { display: block; margin: 15px 0 8px; font-weight: 500; color: var(--text-muted); font-size: 0.9rem; }
+        input, textarea { width: 100%; padding: 12px 15px; background: var(--input-bg); border: 1px solid var(--border); color: white; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
+        
+        .btn { background: var(--primary); color: #000; padding: 12px 25px; font-size: 1rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-delete { background: #ff4d4d22; color: #ff4d4d; border: 1px solid #ff4d4d; padding: 8px 15px; margin-top: 10px; }
         .btn-delete:hover { background: #ff4d4d; color: white; }
 
-        .portfolio-item { 
-            border: 1px solid var(--border); 
-            padding: 20px; 
-            margin: 20px 0; 
-            border-radius: 12px; 
-            background: #252525; 
-        }
-
-        /* Preview Styles */
-        .preview-box {
-            background: #000;
-            border-radius: 16px;
-            padding: 40px;
-            margin-top: 50px;
-            border: 2px dashed var(--primary);
-        }
-
-        .preview-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .preview-card {
-            background: #111;
-            padding: 15px;
-            border-radius: 8px;
-            border-bottom: 3px solid var(--primary);
-        }
-
-        #status { 
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-        }
-
-        .toast {
-            background: #4CAF50;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-            display: none;
-            animation: slideUp 0.5s ease;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        .portfolio-item { border: 1px solid var(--border); padding: 20px; margin: 20px 0; border-radius: 12px; background: #252525; }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: white; padding: 12px 30px; border-radius: 50px; display: none; z-index: 1000; }
     </style>
 </head>
 <body>
@@ -188,90 +47,36 @@
 <div class="container">
     <h1>🛠 מנהל תוכן מקצועי</h1>
 
-    <!-- Hero -->
-   <div class="input-group">
-    <label>העלאת לוגו (תמונה קטנה עד 300KB):</label>
-    <input type="file" id="logoFile" accept="image/*">
-</div>
+    <div class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-id-card"></i> מיתוג ולוגו</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label>טקסט לוגו (השם שלך)</label>
+                <input type="text" id="logoText">
+            </div>
+            <div>
+                <label>העלאת לוגו (תמונה עד 300KB)</label>
+                <input type="file" id="logoFile" accept="image/*">
+            </div>
+        </div>
+    </div>
 
-<script>
-// תוסיף את הפונקציה הזו בתוך ה-script של דף הניהול
-async function saveWithLogo() {
-    const file = document.getElementById('logoFile').files[0];
-    let logoBase64 = null;
-
-    if (file) {
-        if (file.size > 400000) { // בדיקת גודל למניעת עומס על ה-DB
-            alert("התמונה כבדה מדי! אנא העלה לוגו קטן יותר.");
-            return;
-        }
-        logoBase64 = await new Promise(resolve => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.readAsDataURL(file);
-        });
-    }
-
-    const dataToUpdate = {
-        logoText: document.getElementById("logoText").value,
-        heroTitle: document.getElementById("heroTitle").value,
-        heroSubtitle: document.getElementById("heroSubtitle").value,
-        // ... שאר השדות שלך
-    };
-
-    if (logoBase64) dataToUpdate.logoBase64 = logoBase64;
-
-    db.ref('siteContent').update(dataToUpdate).then(() => alert("נשמר בהצלחה!"));
-}
-</script>
-    
     <div class="section">
         <div class="section-header">
             <h2><i class="fas fa-home"></i> מסך ראשי (Hero)</h2>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div>
-                <label>טקסט לוגו</label>
-                <input type="text" id="logoText" oninput="updatePreview()">
-            </div>
-            <div>
-                <label>כותרת ראשית</label>
-                <input type="text" id="heroTitle" oninput="updatePreview()">
-            </div>
-        </div>
+        <label>כותרת ראשית</label>
+        <input type="text" id="heroTitle">
         <label>תיאור תת-כותרת</label>
-        <textarea id="heroSubtitle" rows="2" oninput="updatePreview()"></textarea>
+        <textarea id="heroSubtitle" rows="2"></textarea>
     </div>
 
-    <!-- Services -->
-    <div class="section">
-        <div class="section-header">
-            <h2><i class="fas fa-concierge-bell"></i> שירותים</h2>
-        </div>
-        <div id="servicesContainer">
-            <!-- שירות 1 -->
-            <div style="margin-bottom: 20px; padding: 15px; background: #252525; border-radius: 10px;">
-                <input type="text" id="service1Title" placeholder="כותרת שירות 1" oninput="updatePreview()" style="font-weight: bold; margin-bottom: 10px;">
-                <textarea id="service1Description" rows="2" placeholder="תיאור שירות 1" oninput="updatePreview()"></textarea>
-            </div>
-            <!-- שירות 2 -->
-            <div style="margin-bottom: 20px; padding: 15px; background: #252525; border-radius: 10px;">
-                <input type="text" id="service2Title" placeholder="כותרת שירות 2" oninput="updatePreview()" style="font-weight: bold; margin-bottom: 10px;">
-                <textarea id="service2Description" rows="2" placeholder="תיאור שירות 2" oninput="updatePreview()"></textarea>
-            </div>
-            <!-- שירות 3 -->
-            <div style="padding: 15px; background: #252525; border-radius: 10px;">
-                <input type="text" id="service3Title" placeholder="כותרת שירות 3" oninput="updatePreview()" style="font-weight: bold; margin-bottom: 10px;">
-                <textarea id="service3Description" rows="2" placeholder="תיאור שירות 3" oninput="updatePreview()"></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- Portfolio -->
     <div class="section">
         <div class="section-header">
             <h2><i class="fas fa-film"></i> תיק עבודות</h2>
-            <button class="btn" onclick="addPortfolioItem()" style="padding: 8px 15px; font-size: 0.9rem;">
+            <button class="btn" onclick="addPortfolioItem()">
                 <i class="fas fa-plus"></i> הוסף פרויקט
             </button>
         </div>
@@ -283,21 +88,9 @@ async function saveWithLogo() {
             <i class="fas fa-save"></i> שמור את כל השינויים
         </button>
     </div>
-
-    <!-- Preview Section -->
-    <h2 style="text-align: center; color: var(--text-muted);">תצוגה מקדימה "חיה"</h2>
-    <div class="preview-box" id="preview">
-        <div class="preview-header">
-            <h4 id="previewLogo" style="color: var(--primary); margin: 0;">לוגו</h4>
-            <h1 id="previewHeroTitle" style="font-size: 2rem; margin: 10px 0;">הכותרת שלך</h1>
-            <p id="previewHeroSubtitle" style="color: var(--text-muted);"></p>
-        </div>
-        <div id="previewServices" class="preview-grid"></div>
-        <div id="previewPortfolio" class="preview-grid" style="margin-top: 40px;"></div>
-    </div>
 </div>
 
-<div id="status"><div class="toast" id="toast">✅ השינויים נשמרו בהצלחה!</div></div>
+<div id="toast">✅ השינויים נשמרו בהצלחה!</div>
 
 <script>
     const firebaseConfig = {
@@ -310,78 +103,81 @@ async function saveWithLogo() {
     const db = firebase.database();
     let portfolioItems = [];
 
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
-    
+    // טעינת נתונים קיימים בפתיחה
+    function loadExistingData() {
+        db.ref('siteContent').once('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById("logoText").value = data.logoText || "";
+                document.getElementById("heroTitle").value = data.heroTitle || "";
+                document.getElementById("heroSubtitle").value = data.heroSubtitle || "";
+                portfolioItems = Array.isArray(data.portfolio) ? data.portfolio : (data.portfolio ? Object.values(data.portfolio) : []);
+                renderPortfolio();
+            }
+        });
+    }
+
     function renderPortfolio() {
         const container = document.getElementById("portfolioContainer");
         container.innerHTML = "";
         portfolioItems.forEach((item, i) => {
+            if (!item) return;
             const div = document.createElement("div");
             div.className = "portfolio-item";
             div.innerHTML = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <input type="text" class="p-title" placeholder="שם פרויקט">
-                    <input type="text" class="p-role" placeholder="תפקיד">
+                    <input type="text" value="${item.title || ''}" oninput="portfolioItems[${i}].title = this.value" placeholder="שם פרויקט">
+                    <input type="text" value="${item.role || ''}" oninput="portfolioItems[${i}].role = this.value" placeholder="תפקיד">
                 </div>
-                <textarea class="p-embed" rows="3" style="margin-top:10px;" placeholder="קוד iframe או לינק יוטיוב"></textarea>
+                <textarea style="margin-top:10px;" rows="2" oninput="portfolioItems[${i}].youtubeEmbed = this.value" placeholder="לינק יוטיוב">${item.youtubeEmbed || ''}</textarea>
                 <button class="btn btn-delete" onclick="deletePortfolioItem(${i})">מחק</button>`;
-            
-            const t = div.querySelector(".p-title"), r = div.querySelector(".p-role"), e = div.querySelector(".p-embed");
-            t.value = item.title || ""; r.value = item.role || ""; e.value = item.youtubeEmbed || "";
-            t.oninput = () => { portfolioItems[i].title = t.value; updatePreview(); };
-            r.oninput = () => { portfolioItems[i].role = r.value; updatePreview(); };
-            e.oninput = () => { portfolioItems[i].youtubeEmbed = e.value; updatePreview(); };
             container.appendChild(div);
         });
-        updatePreview();
     }
 
     function addPortfolioItem() { portfolioItems.push({title:"", role:"", youtubeEmbed:""}); renderPortfolio(); }
     function deletePortfolioItem(i) { if(confirm("למחוק?")) { portfolioItems.splice(i,1); renderPortfolio(); } }
 
-    function updatePreview() {
-        document.getElementById("previewLogo").innerText = document.getElementById("logoText").value;
-        document.getElementById("previewHeroTitle").innerText = document.getElementById("heroTitle").value;
-        document.getElementById("previewHeroSubtitle").innerText = document.getElementById("heroSubtitle").value;
-        const grid = document.getElementById("previewPortfolio"); grid.innerHTML = "";
-        portfolioItems.forEach(item => {
-            let vid = "";
-            if (item.youtubeEmbed.includes("<iframe")) vid = item.youtubeEmbed;
-            else if (item.youtubeEmbed.includes("v=")) {
-                const id = item.youtubeEmbed.split("v=")[1].split("&")[0];
-                vid = `<iframe src="https://www.youtube.com/embed/${id}"></iframe>`;
-            }
-            grid.innerHTML += `<div class="preview-card"><b>${item.title}</b><br><small>${item.role}</small><div class="video-container">${vid}</div></div>`;
-        });
-    }
+    // פונקציית השמירה המאוחדת והמתוקנת
+    async function saveAllContent() {
+        const file = document.getElementById('logoFile').files[0];
+        let logoBase64 = null;
 
-   async function saveAllContent() {
-    const fileInput = document.getElementById('logoFileInput');
-    const file = fileInput.files[0];
-    let logoUrl = d.logoUrl || ""; // נשמור על הקיים אם לא הועלה חדש
-
-    try {
-        // אם נבחר קובץ חדש - נעלה אותו ל-Storage
+        // אם נבחר לוגו חדש - נהפוך אותו לטקסט
         if (file) {
-            const storageRef = firebase.storage().ref('site/logo_' + Date.now());
-            const snapshot = await storageRef.put(file);
-            logoUrl = await snapshot.ref.getDownloadURL();
+            if (file.size > 400000) {
+                alert("הלוגו גדול מדי! אנא העלה קובץ קטן מ-400KB");
+                return;
+            }
+            logoBase64 = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(file);
+            });
         }
 
-        await db.ref('siteContent').update({
+        const dataToUpdate = {
             logoText: document.getElementById("logoText").value,
             heroTitle: document.getElementById("heroTitle").value,
             heroSubtitle: document.getElementById("heroSubtitle").value,
-            logoUrl: logoUrl, // שמירת הקישור לתמונה בתוך ה-Database
             portfolio: portfolioItems
+        };
+
+        // הוספת הלוגו רק אם הועלה אחד חדש
+        if (logoBase64) {
+            dataToUpdate.logoBase64 = logoBase64;
+        }
+
+        db.ref('siteContent').update(dataToUpdate).then(() => {
+            const toast = document.getElementById("toast");
+            toast.style.display = "block";
+            setTimeout(() => { toast.style.display = "none"; }, 3000);
+        }).catch(err => {
+            alert("שגיאה בשמירה: " + err.message);
         });
-        
-        alert("נשמר בהצלחה!");
-    } catch (e) {
-        console.error(e);
-        alert("שגיאה בשמירה");
     }
-}
+
+    window.onload = loadExistingData;
 </script>
 </body>
 </html>
