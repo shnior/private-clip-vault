@@ -216,17 +216,15 @@ function loadDynamicContent() {
                document.querySelectorAll('#headerLogoText, .footer-logo').forEach(el => el.textContent = data.logoText);
                  }
 
-                 // עדכון תמונת הלוגו
-              const logoImg = document.getElementById('headerLogo');
-                   if (data.logoUrl) {
-                logoImg.src = data.logoUrl;
-                logoImg.style.display = 'block'; // הצגת התמונה רק אם היא קיימת
-              } else {
-                   logoImg.style.display = 'none';
-                }
-    
-               // ... שאר הקוד שלך לפורטפוליו
-                });
+                 // עדכון תמונת הלוגו (שימוש ב-Base64 במקום URL)
+const logoImg = document.getElementById('headerLogo');
+
+if (data.logoBase64) { 
+    logoImg.src = data.logoBase64;
+    logoImg.style.display = 'block'; // מציג את התמונה אם היא קיימת
+} else {
+    logoImg.style.display = 'none'; // מחביא את האלמנט אם אין תמונה
+}
     
     db.ref('siteContent').once('value', (snapshot) => {
         const data = snapshot.val();
