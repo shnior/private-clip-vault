@@ -3,29 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מנהל תוכן</title>
+  <title>מנהל תוכן - שניאור אייזנבך</title>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background:#111; color:#fff; padding:30px; }
-    input, textarea { width: 90%; padding:12px; margin:8px 0; background:#222; color:white; border:1px solid gold; }
-    button { padding:15px 30px; font-size:18px; background:#D4AF37; color:black; border:none; cursor:pointer; }
-    #status { margin:15px 0; font-weight:bold; }
+    body { font-family: 'Heebo', Arial, sans-serif; background: #0a0507; color: #f4f4f4; padding: 30px; max-width: 800px; margin: 0 auto; }
+    h1 { color: #D4AF37; text-align: center; }
+    label { display: block; margin: 15px 0 5px; font-weight: bold; color: #D4AF37; }
+    input, textarea { width: 100%; padding: 14px; background: #1a0f12; border: 1px solid #7a1528; color: white; border-radius: 8px; font-size: 1.05rem; }
+    button { background: #7a1528; color: white; padding: 16px 40px; font-size: 1.2rem; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; width: 100%; }
+    button:hover { background: #D4AF37; color: black; }
+    #status { margin-top: 20px; font-size: 1.1rem; text-align: center; min-height: 30px; }
+    .success { color: #4CAF50; }
+    .error { color: #ff4444; }
   </style>
 </head>
 <body>
-  <h1>מנהל תוכן - שניאור אייזנבך</h1>
+  <h1>🛠 מנהל תוכן - שניאור אייזנבך</h1>
 
-  <label>לוגו:</label>
+  <label>לוגו (טקסט):</label>
   <input type="text" id="logoText">
 
   <label>כותרת ראשית:</label>
   <input type="text" id="heroTitle">
 
-  <label>תיאור:</label>
-  <textarea id="heroSubtitle" rows="3"></textarea>
+  <label>תיאור ראשי:</label>
+  <textarea id="heroSubtitle" rows="4"></textarea>
 
-  <button onclick="saveContent()">שמור שינויים</button>
+  <button onclick="saveContent()">💾 שמור שינויים</button>
 
   <div id="status"></div>
 
@@ -33,6 +38,7 @@
     const firebaseConfig = {
       apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
       authDomain: "shnior-studio.firebaseapp.com",
+      databaseURL: "https://shnior-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "shnior-studio",
       storageBucket: "shnior-studio.firebasestorage.app",
       messagingSenderId: "163064507259",
@@ -40,41 +46,37 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const db = firebase.database();
 
     async function saveContent() {
       const status = document.getElementById("status");
       status.textContent = "שומר...";
 
       try {
-        await db.collection("general").doc("main").set({
+        await db.ref('general/main').set({
           logoText: document.getElementById("logoText").value,
           heroTitle: document.getElementById("heroTitle").value,
           heroSubtitle: document.getElementById("heroSubtitle").value,
-          updatedAt: new Date()
-        }, { merge: true });
+          updatedAt: Date.now()
+        });
 
-        status.style.color = "lime";
-        status.textContent = "✅ נשמר בהצלחה!";
-        
+        status.innerHTML = '<span class="success">✅ נשמר בהצלחה!</span>';
       } catch (error) {
-        console.error("שגיאה:", error);
-        status.style.color = "red";
-        status.textContent = "❌ שגיאה: " + error.message;
+        console.error(error);
+        status.innerHTML = `<span class="error">❌ שגיאה: ${error.message}</span>`;
       }
     }
 
-    // טעינה ראשונית
-    window.onload = async () => {
-      try {
-        const doc = await db.collection("general").doc("main").get();
-        if (doc.exists) {
-          const d = doc.data();
-          document.getElementById("logoText").value = d.logoText || "";
-          document.getElementById("heroTitle").value = d.heroTitle || "";
-          document.getElementById("heroSubtitle").value = d.heroSubtitle || "";
+    // טעינת נתונים
+    window.onload = () => {
+      db.ref('general/main').once('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          document.getElementById("logoText").value = data.logoText || "שניאור אייזנבך";
+          document.getElementById("heroTitle").value = data.heroTitle || "הסאונד. הוויזואל. ההפקה.";
+          document.getElementById("heroSubtitle").value = data.heroSubtitle || "קלידן, מפיק מוזיקלי, עורך וידאו ואנימטור";
         }
-      } catch(e) { console.error(e); }
+      });
     };
   </script>
 </body>
