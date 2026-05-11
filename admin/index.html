@@ -110,19 +110,19 @@
       <h2>שירותים</h2>
     </div>
     <label>שירות 1 - כותרת</label>
-    <input type="text" id="s1_title" oninput="updatePreview()">
+    <input type="text" id="service1Title" oninput="updatePreview()">
     <label>שירות 1 - תיאור</label>
-    <textarea id="s1_desc" rows="3" oninput="updatePreview()"></textarea>
+    <textarea id="service1Description" rows="3" oninput="updatePreview()"></textarea>
 
     <label>שירות 2 - כותרת</label>
-    <input type="text" id="s2_title" oninput="updatePreview()">
+    <input type="text" id="service2Title" oninput="updatePreview()">
     <label>שירות 2 - תיאור</label>
-    <textarea id="s2_desc" rows="3" oninput="updatePreview()"></textarea>
+    <textarea id="service2Description" rows="3" oninput="updatePreview()"></textarea>
 
     <label>שירות 3 - כותרת</label>
-    <input type="text" id="s3_title" oninput="updatePreview()">
+    <input type="text" id="service3Title" oninput="updatePreview()">
     <label>שירות 3 - תיאור</label>
-    <textarea id="s3_desc" rows="3" oninput="updatePreview()"></textarea>
+    <textarea id="service3Description" rows="3" oninput="updatePreview()"></textarea>
   </div>
 
   <!-- Portfolio -->
@@ -203,15 +203,17 @@
         document.getElementById("heroSubtitle").value = d.heroSubtitle || "קלידן, מפיק מוזיקלי, עורך וידאו ואנימטור";
 
         // שירותים
-        document.getElementById("s1_title").value = d.services?.s1?.title || "לייב על הבמה";
-        document.getElementById("s1_desc").value = d.services?.s1?.desc || "";
-        document.getElementById("s2_title").value = d.services?.s2?.title || "עריכה והפקות וידאו";
-        document.getElementById("s2_desc").value = d.services?.s2?.desc || "";
-        document.getElementById("s3_title").value = d.services?.s3?.title || "הנפשה וכלי AI";
-        document.getElementById("s3_desc").value = d.services?.s3?.desc || "";
+        document.getElementById("service1Title").value = d.services?.s1?.title || "לייב על הבמה";
+        document.getElementById("service1Description").value = d.services?.s1?.desc || "";
+        document.getElementById("service2Title").value = d.services?.s2?.title || "עריכה והפקות וידאו";
+        document.getElementById("service2Description").value = d.services?.s2?.desc || "";
+        document.getElementById("service3Title").value = d.services?.s3?.title || "הנפשה וכלי AI";
+        document.getElementById("service3Description").value = d.services?.s3?.desc || "";
 
         portfolioItems = d.portfolio || [];
         renderPortfolio();
+      }).catch(error => {
+        console.error("שגיאה בהטענת תוכן:", error);
       });
     }
 
@@ -224,9 +226,9 @@
       previewServices.innerHTML = `
         <h3>שירותים:</h3>
         <ul>
-          <li>${document.getElementById("s1_title").value || "שירות 1"}: ${document.getElementById("s1_desc").value || ""}</li>
-          <li>${document.getElementById("s2_title").value || "שירות 2"}: ${document.getElementById("s2_desc").value || ""}</li>
-          <li>${document.getElementById("s3_title").value || "שירות 3"}: ${document.getElementById("s3_desc").value || ""}</li>
+          <li>${document.getElementById("service1Title").value || "שירות 1"}: ${document.getElementById("service1Description").value || ""}</li>
+          <li>${document.getElementById("service2Title").value || "שירות 2"}: ${document.getElementById("service2Description").value || ""}</li>
+          <li>${document.getElementById("service3Title").value || "שירות 3"}: ${document.getElementById("service3Description").value || ""}</li>
         </ul>
       `;
 
@@ -253,9 +255,9 @@
         heroTitle: document.getElementById("heroTitle").value,
         heroSubtitle: document.getElementById("heroSubtitle").value,
         services: {
-          s1: { title: document.getElementById("s1_title").value, desc: document.getElementById("s1_desc").value },
-          s2: { title: document.getElementById("s2_title").value, desc: document.getElementById("s2_desc").value },
-          s3: { title: document.getElementById("s3_title").value, desc: document.getElementById("s3_desc").value }
+          s1: { title: document.getElementById("service1Title").value, desc: document.getElementById("service1Description").value },
+          s2: { title: document.getElementById("service2Title").value, desc: document.getElementById("service2Description").value },
+          s3: { title: document.getElementById("service3Title").value, desc: document.getElementById("service3Description").value }
         },
         portfolio: portfolioItems,
         lastUpdated: Date.now()
