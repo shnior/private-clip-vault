@@ -190,10 +190,40 @@
 
     <!-- Hero -->
    <div class="input-group">
-    <label>העלאת לוגו (תמונה):</label>
-    <input type="file" id="logoFileInput" accept="image/*">
-    <img id="logoPreview" src="" style="max-height: 50px; display: none; margin-top: 10px;">
+    <label>העלאת לוגו (תמונה קטנה עד 300KB):</label>
+    <input type="file" id="logoFile" accept="image/*">
 </div>
+
+<script>
+// תוסיף את הפונקציה הזו בתוך ה-script של דף הניהול
+async function saveWithLogo() {
+    const file = document.getElementById('logoFile').files[0];
+    let logoBase64 = null;
+
+    if (file) {
+        if (file.size > 400000) { // בדיקת גודל למניעת עומס על ה-DB
+            alert("התמונה כבדה מדי! אנא העלה לוגו קטן יותר.");
+            return;
+        }
+        logoBase64 = await new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    const dataToUpdate = {
+        logoText: document.getElementById("logoText").value,
+        heroTitle: document.getElementById("heroTitle").value,
+        heroSubtitle: document.getElementById("heroSubtitle").value,
+        // ... שאר השדות שלך
+    };
+
+    if (logoBase64) dataToUpdate.logoBase64 = logoBase64;
+
+    db.ref('siteContent').update(dataToUpdate).then(() => alert("נשמר בהצלחה!"));
+}
+</script>
     
     <div class="section">
         <div class="section-header">
