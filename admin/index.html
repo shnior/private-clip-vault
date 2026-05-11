@@ -3,34 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מנהל תוכן - שניאור אייזנבך</title>
+  <title>מנהל תוכן</title>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <style>
-    body { font-family: 'Heebo', Arial, sans-serif; background: #0a0507; color: #f4f4f4; padding: 30px; max-width: 800px; margin: 0 auto; }
-    h1 { color: #D4AF37; text-align: center; }
-    label { display: block; margin: 15px 0 5px; font-weight: bold; color: #D4AF37; }
-    input, textarea { width: 100%; padding: 14px; background: #1a0f12; border: 1px solid #7a1528; color: white; border-radius: 8px; font-size: 1.05rem; }
-    button { background: #7a1528; color: white; padding: 16px 40px; font-size: 1.2rem; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }
-    button:hover { background: #D4AF37; color: black; }
-    #status { margin-top: 20px; font-size: 1.1rem; text-align: center; min-height: 30px; }
-    .success { color: #4CAF50; }
-    .error { color: #ff4444; }
+    body { font-family: Arial, sans-serif; background:#111; color:#fff; padding:30px; }
+    input, textarea { width: 90%; padding:12px; margin:8px 0; background:#222; color:white; border:1px solid gold; }
+    button { padding:15px 30px; font-size:18px; background:#D4AF37; color:black; border:none; cursor:pointer; }
+    #status { margin:15px 0; font-weight:bold; }
   </style>
 </head>
 <body>
-  <h1>🛠 מנהל תוכן - שניאור אייזנבך</h1>
+  <h1>מנהל תוכן - שניאור אייזנבך</h1>
 
-  <label>לוגו (טקסט):</label>
+  <label>לוגו:</label>
   <input type="text" id="logoText">
 
-  <label>כותרת ראשית (Hero):</label>
+  <label>כותרת ראשית:</label>
   <input type="text" id="heroTitle">
 
-  <label>תיאור ראשי (Hero):</label>
-  <textarea id="heroSubtitle" rows="4"></textarea>
+  <label>תיאור:</label>
+  <textarea id="heroSubtitle" rows="3"></textarea>
 
-  <button onclick="saveContent()">💾 שמור שינויים</button>
+  <button onclick="saveContent()">שמור שינויים</button>
 
   <div id="status"></div>
 
@@ -47,56 +42,40 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // טעינת נתונים קיימים
-    async function loadContent() {
+    async function saveContent() {
+      const status = document.getElementById("status");
+      status.textContent = "שומר...";
+
+      try {
+        await db.collection("general").doc("main").set({
+          logoText: document.getElementById("logoText").value,
+          heroTitle: document.getElementById("heroTitle").value,
+          heroSubtitle: document.getElementById("heroSubtitle").value,
+          updatedAt: new Date()
+        }, { merge: true });
+
+        status.style.color = "lime";
+        status.textContent = "✅ נשמר בהצלחה!";
+        
+      } catch (error) {
+        console.error("שגיאה:", error);
+        status.style.color = "red";
+        status.textContent = "❌ שגיאה: " + error.message;
+      }
+    }
+
+    // טעינה ראשונית
+    window.onload = async () => {
       try {
         const doc = await db.collection("general").doc("main").get();
         if (doc.exists) {
           const d = doc.data();
-          document.getElementById("logoText").value = d.logoText || "שניאור אייזנבך";
-          document.getElementById("heroTitle").value = d.heroTitle || "הסאונד. הוויזואל. ההפקה.";
-          document.getElementById("heroSubtitle").value = d.heroSubtitle || "קלידן, מפיק מוזיקלי, עורך וידאו ואנימטור";
+          document.getElementById("logoText").value = d.logoText || "";
+          document.getElementById("heroTitle").value = d.heroTitle || "";
+          document.getElementById("heroSubtitle").value = d.heroSubtitle || "";
         }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    // שמירה עם דיבאג
-    async function saveContent() {
-      const status = document.getElementById("status");
-      status.textContent = "שומר...";
-      status.className = "";
-
-      const data = {
-        logoText: document.getElementById("logoText").value,
-        heroTitle: document.getElementById("heroTitle").value,
-        heroSubtitle: document.getElementById("heroSubtitle").value,
-        lastUpdated: new Date().toISOString()
-      };
-
-      console.log("📤 מנסה לשמור:", data);
-
-      try {
-        await db.collection("general").doc("main").set(data, { merge: true });
-        
-        console.log("✅ שמירה הצליחה!");
-        status.innerHTML = '<span class="success">✅ השינויים נשמרו בהצלחה!</span>';
-        
-        // רענון האתר הראשי אחרי שמירה
-        setTimeout(() => {
-          if (confirm("השינויים נשמרו. לרענן את האתר הראשי?")) {
-            window.opener?.location.reload();
-          }
-        }, 800);
-
-      } catch (error) {
-        console.error("❌ שגיאת שמירה:", error);
-        status.innerHTML = `<span class="error">❌ שגיאה: ${error.message}</span>`;
-      }
-    }
-
-    window.onload = loadContent;
+      } catch(e) { console.error(e); }
+    };
   </script>
 </body>
 </html>
