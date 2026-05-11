@@ -218,6 +218,11 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
 <script>
+<!-- ====================== Firebase Realtime Database ====================== -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+<script>
 // ==================== Firebase Config ====================
 const firebaseConfig = {
   apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
@@ -232,49 +237,35 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ==================== טעינת תיק עבודות ====================
-function loadPortfolio() {
-  db.ref('siteContent/portfolio').once('value', (snapshot) => {
-    const projects = snapshot.val();
-    const grid = document.getElementById("portfolioGrid");
-    grid.innerHTML = "";
+// ==================== טעינת תוכן ====================
+function loadDynamicContent() {
+  console.log("🔄 טוען תוכן מ-siteContent...");
 
-    if (!projects || projects.length === 0) {
-      grid.innerHTML = "<p style='text-align:center; grid-column:1/-1;'>אין פרויקטים עדיין</p>";
-      return;
-    }
+  db.ref('siteContent').once('value', (snapshot) => {
+    const data = snapshot.val();
+    console.log("📥 נתונים שהתקבלו:", data);
 
-    projects.forEach(project => {
-      if (!project.title) return;
+    if (!data) return;
 
-      const cardHTML = `
-        <div class="portfolio-card" onclick="playVideo('${project.youtube || '#'}')">
-          <div class="thumbnail-container">
-            <div class="thumbnail-bg" style="background-image: url('https://via.placeholder.com/600x400/111/333?text=${encodeURIComponent(project.title)}');"></div>
-            <div class="play-button"></div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">${project.title}</h3>
-            <p class="card-role">${project.role || 'הנפשה'}</p>
-          </div>
-        </div>
-      `;
-      grid.innerHTML += cardHTML;
-    });
+    // לוגו
+    const logo = document.querySelector('.logo');
+    if (logo && data.logoText) logo.textContent = data.logoText;
+
+    // Hero
+    const heroH1 = document.querySelector('.hero h1');
+    if (heroH1 && data.heroTitle) heroH1.textContent = data.heroTitle;
+
+    const heroH2 = document.querySelector('.hero h2');
+    if (heroH2 && data.heroSubtitle) heroH2.textContent = data.heroSubtitle;
+
+    console.log("✅ האתר עודכן בהצלחה!");
+  }, (error) => {
+    console.error("❌ שגיאה:", error);
   });
 }
 
-// פונקציה לפתיחת יוטיוב
-function playVideo(url) {
-  if (url && url.includes("youtube")) {
-    window.open(url, '_blank');
-  } else {
-    alert("קישור ליוטיוב לא הוגדר לפרויקט זה");
-  }
-}
-
-// טען את כל התוכן
-window.addEventListener('load', () => {
-  loadPortfolio();
-});
+// טען את התוכן
+window.addEventListener('load', loadDynamicContent);
 </script>
+</body>
+</html>
