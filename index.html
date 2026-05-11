@@ -204,7 +204,7 @@
         </div>
     </section>
 
-    <footer id="contact">
+   <footer id="contact">
         <div class="footer-logo">שניאור אייזנבך</div>
         <div class="contact-info">
             <strong>זמין לאירועים, חתונות והפקות סטודיו.</strong><br>
@@ -212,97 +212,106 @@
         </div>
         <a href="https://wa.me/972000000000" target="_blank" class="cta-btn">שלח הודעת וואטסאפ</a>
     </footer>
-<!-- Firebase Realtime Database -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
-<script>
-// ==================== Firebase Config ====================
-const firebaseConfig = {
-  apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
-  authDomain: "shnior-studio.firebaseapp.com",
-  databaseURL: "https://shnior-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "shnior-studio",
-  storageBucket: "shnior-studio.firebasestorage.app",
-  messagingSenderId: "163064507259",
-  appId: "1:163064507259:web:3fb46c6795eba5b84f6bde"
-};
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-function loadDynamicContent() {
-  console.log("🔄 מתחיל סנכרון נתונים...");
-
-  db.ref('siteContent').once('value', (snapshot) => {
-    const data = snapshot.val();
-    if (!data) {
-      console.log("⚠️ לא נמצאו נתונים ב-Firebase");
-      return;
-    }
-
-    // 1. עדכון לוגו (בכל המקומות שמופיע)
-    if (data.logoText) {
-      document.querySelectorAll('.logo, .footer-logo').forEach(el => {
-        el.textContent = data.logoText;
-      });
-    }
-
-    // 2. עדכון כותרת Hero - חיפוש לפי תגית h1 בתוך section#home
-    if (data.heroTitle) {
-      const h1 = document.querySelector('#home h1');
-      if (h1) h1.textContent = data.heroTitle;
-    }
-
-    // 3. עדכון תת-כותרת Hero - חיפוש לפי תגית h2 בתוך section#home
-    if (data.heroSubtitle) {
-      const h2 = document.querySelector('#home h2');
-      if (h2) h2.textContent = data.heroSubtitle;
-    }
-
-    // 4. עדכון תיק עבודות
-    const portfolioGrid = document.querySelector('.portfolio-grid');
-    if (portfolioGrid && data.portfolio) {
-      portfolioGrid.innerHTML = ''; // ניקוי פרויקטים קיימים
-      
-      const portfolioArray = Array.isArray(data.portfolio) ? data.portfolio : Object.values(data.portfolio);
-
-      portfolioArray.forEach(item => {
-        if (!item) return;
-
-        // חילוץ ID של יוטיוב בצורה בטוחה
-        let videoId = "";
-        const source = item.youtubeEmbed || "";
-        if (source.includes("v=")) videoId = source.split("v=")[1].split("&")[0];
-        else if (source.includes("youtu.be/")) videoId = source.split("/").pop();
-        else if (source.includes("embed/")) videoId = source.split("embed/")[1].split(/[? "]/)[0];
-
-        const thumbUrl = videoId 
-          ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` 
-          : 'https://via.placeholder.com/600/111/333?text=Project';
-
-        const card = document.createElement('div');
-        card.className = 'portfolio-card';
-        card.onclick = () => {
-           if (videoId) window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+    <script>
+        // 1. קונפיגורציה (Firebase Config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
+            authDomain: "shnior-studio.firebaseapp.com",
+            databaseURL: "https://shnior-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "shnior-studio",
+            storageBucket: "shnior-studio.firebasestorage.app",
+            messagingSenderId: "163064507259",
+            appId: "1:163064507259:web:3fb46c6795eba5b84f6bde"
         };
 
-        card.innerHTML = `
-          <div class="thumbnail-container">
-            <div class="thumbnail-bg" style="background-image: url('${thumbUrl}');"></div>
-            <div class="play-button"></div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">${item.title || "פרויקט חדש"}</h3>
-            <p class="card-role">${item.role || ""}</p>
-          </div>
-        `;
-        portfolioGrid.appendChild(card);
-      });
-    }
-    console.log("✅ האתר סונכרן בהצלחה!");
-  });
-}
+        // 2. אתחול
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-// הפעלת הטעינה כשהדף מוכן
-window.addEventListener('load', loadDynamicContent);
+        // 3. פונקציית הטעינה
+        function loadDynamicContent() {
+            console.log("🔄 מסנכרן נתונים מ-Firebase...");
+
+            db.ref('siteContent').once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    console.warn("⚠️ לא נמצאו נתונים ב-Firebase");
+                    return;
+                }
+
+                // עדכון לוגו
+                if (data.logoText) {
+                    document.querySelectorAll('.logo, .footer-logo').forEach(el => el.textContent = data.logoText);
+                }
+
+                // עדכון כותרות Hero
+                if (data.heroTitle) {
+                    const h1 = document.querySelector('.hero h1');
+                    if (h1) h1.textContent = data.heroTitle;
+                }
+                if (data.heroSubtitle) {
+                    const h2 = document.querySelector('.hero h2');
+                    if (h2) h2.textContent = data.heroSubtitle;
+                }
+
+                // עדכון פורטפוליו
+                const portfolioGrid = document.querySelector('.portfolio-grid');
+                if (portfolioGrid && data.portfolio) {
+                    portfolioGrid.innerHTML = ''; // ניקוי הקיים
+                    
+                    // המרה למערך למקרה שהנתונים נשמרו כאובייקט
+                    const items = Array.isArray(data.portfolio) ? data.portfolio : Object.values(data.portfolio);
+
+                    items.forEach(item => {
+                        if (!item) return;
+
+                        // חילוץ ID של יוטיוב בצורה בטוחה יותר
+                        let videoId = "";
+                        const url = item.youtubeEmbed || "";
+                        
+                        if (url.includes("v=")) {
+                            videoId = url.split("v=")[1].split("&")[0];
+                        } else if (url.includes("youtu.be/")) {
+                            videoId = url.split("/").pop().split("?")[0];
+                        } else if (url.includes("embed/")) {
+                            videoId = url.split("embed/")[1].split(/[? "]/)[0];
+                        }
+
+                        const thumbUrl = videoId 
+                            ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+                            : 'https://via.placeholder.com/600x400/111/333?text=Project';
+
+                        const card = document.createElement('div');
+                        card.className = 'portfolio-card';
+                        card.onclick = () => {
+                            if (videoId) window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+                        };
+
+                        card.innerHTML = `
+                            <div class="thumbnail-container">
+                                <div class="thumbnail-bg" style="background-image: url('${thumbUrl}');"></div>
+                                <div class="play-button"></div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">${item.title || "פרויקט חדש"}</h3>
+                                <p class="card-role">${item.role || ""}</p>
+                            </div>
+                        `;
+                        portfolioGrid.appendChild(card);
+                    });
+                }
+                console.log("✅ האתר סונכרן!");
+            }, (error) => {
+                console.error("❌ שגיאה בטעינה:", error);
+            });
+        }
+
+        // 4. הרצה בטעינת הדף
+        window.addEventListener('DOMContentLoaded', loadDynamicContent);
+    </script>
+</body>
+</html>
