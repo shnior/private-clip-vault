@@ -3,88 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מנהל תוכן - שניאור אייזנבך</title>
+  <title>מנהל תוכן</title>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <style>
-    body { font-family: 'Heebo', Arial, sans-serif; background: #0a0507; color: #f4f4f4; padding: 30px; }
-    h1 { color: #D4AF37; text-align: center; }
-    .section { background: #1a0f12; padding: 20px; margin: 20px 0; border-radius: 10px; border: 1px solid #7a1528; }
-    label { display: block; margin: 10px 0 5px; color: #D4AF37; }
-    input, textarea { width: 100%; padding: 12px; background: #111; border: 1px solid #7a1528; color: white; border-radius: 6px; }
-    button { background: #7a1528; color: white; padding: 15px 30px; font-size: 1.2rem; border: none; border-radius: 8px; cursor: pointer; }
-    button:hover { background: #D4AF37; color: black; }
-    #status { text-align: center; font-size: 1.2rem; margin: 20px 0; }
+    body { font-family: Arial, sans-serif; background:#111; color:#fff; padding:30px; text-align:center; }
+    input, textarea { width: 80%; padding:12px; margin:10px; background:#222; color:white; }
+    button { padding:15px 30px; font-size:18px; background:#D4AF37; color:black; border:none; }
   </style>
 </head>
 <body>
-  <h1>🛠 מנהל תוכן - שניאור אייזנבך</h1>
+  <h1>מנהל תוכן - בדיקה</h1>
 
-  <div class="section">
-    <label>טקסט לוגו</label>
-    <input type="text" id="logoText">
-
-    <label>כותרת ראשית</label>
-    <input type="text" id="heroTitle">
-
-    <label>תיאור ראשי</label>
-    <textarea id="heroSubtitle" rows="3"></textarea>
-  </div>
-
-  <button onclick="saveContent()">💾 שמור שינויים</button>
-  <div id="status"></div>
+  <input type="text" id="heroTitle" placeholder="כותרת ראשית" value="הסאונד. הוויזואל. ההפקה."><br><br>
+  
+  <button onclick="saveTest()">שמור</button>
+  <p id="status"></p>
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
       authDomain: "shnior-studio.firebaseapp.com",
       databaseURL: "https://shnior-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "shnior-studio",
-      storageBucket: "shnior-studio.firebasestorage.app",
-      messagingSenderId: "163064507259",
-      appId: "1:163064507259:web:3fb46c6795eba5b84f6bde"
+      projectId: "shnior-studio"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // טעינה
-    function loadContent() {
-      db.ref('siteContent').once('value', (snapshot) => {
-        const data = snapshot.val() || {};
-        console.log("📥 נתונים נטענו:", data);
-        
-        document.getElementById("logoText").value = data.logoText || "שניאור אייזנבך";
-        document.getElementById("heroTitle").value = data.heroTitle || "הסאונד. הוויזואל. ההפקה.";
-        document.getElementById("heroSubtitle").value = data.heroSubtitle || "קלידן, מפיק מוזיקלי, עורך וידאו ואנימטור";
-      });
-    }
-
-    // שמירה
-    async function saveContent() {
+    function saveTest() {
       const status = document.getElementById("status");
       status.textContent = "שומר...";
 
-      const data = {
-        logoText: document.getElementById("logoText").value,
+      db.ref('test').set({
         heroTitle: document.getElementById("heroTitle").value,
-        heroSubtitle: document.getElementById("heroSubtitle").value,
-        lastUpdated: Date.now()
-      };
-
-      console.log("📤 שומר את הנתונים:", data);
-
-      try {
-        await db.ref('siteContent').set(data);
-        status.innerHTML = '✅ <span style="color:lime">נשמר בהצלחה!</span>';
-        console.log("✅ שמירה הצליחה");
-      } catch (error) {
-        console.error("❌ שגיאה:", error);
-        status.innerHTML = '❌ שגיאה - ראה Console';
-      }
+        time: new Date().toISOString()
+      }).then(() => {
+        status.style.color = "lime";
+        status.textContent = "✅ נשמר! בדוק ב-Firebase";
+      }).catch((error) => {
+        status.style.color = "red";
+        status.textContent = "שגיאה: " + error.message;
+      });
     }
-
-    window.onload = loadContent;
   </script>
 </body>
 </html>
