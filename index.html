@@ -261,39 +261,53 @@
                 }
 
                 // עדכון פורטפוליו
-                const portfolioGrid = document.querySelector('.portfolio-grid');
-                if (portfolioGrid && data.portfolio) {
-                    portfolioGrid.innerHTML = ''; 
-                    const items = Array.isArray(data.portfolio) ? data.portfolio : Object.values(data.portfolio);
+portfolioArray.forEach(item => {
+        if (!item) return;
 
-                    items.forEach(item => {
-                        if (!item) return;
-                        let videoId = "";
-                        const url = item.youtubeEmbed || "";
-                        
-                        if (url.includes("v=")) videoId = url.split("v=")[1].split("&")[0];
-                        else if (url.includes("youtu.be/")) videoId = url.split("/").pop().split("?")[0];
-                        else if (url.includes("embed/")) videoId = url.split("embed/")[1].split(/[? "]/)[0];
+        // חילוץ ID של יוטיוב בצורה חכמה (תומך בלינק רגיל, קצר או iframe)
+        let videoId = "";
+        const source = item.youtubeEmbed || "";
+        
+        if (source.includes("v=")) {
+          videoId = source.split("v=")[1].split("&")[0];
+        } else if (source.includes("youtu.be/")) {
+          videoId = source.split("/").pop().split("?")[0];
+        } else if (source.includes("embed/")) {
+          videoId = source.split("embed/")[1].split(/[? "]/)[0];
+        }
 
-                        const thumbUrl = videoId 
-                            ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-                            : 'https://via.placeholder.com/600x400/111/333?text=Project';
+        const thumbUrl = videoId 
+          ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` 
+          : 'https://via.placeholder.com/600x400/111/333?text=Shnior+Studio';
 
-                        const card = document.createElement('div');
-                        card.className = 'portfolio-card';
-                        card.onclick = () => { if (videoId) window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank'); };
+        // בניית הכרטיסייה
+        const card = document.createElement('div');
+        card.className = 'portfolio-card';
+        
+        // הפעלה ישירה בתוך העמוד בלחיצה
+        card.onclick = function() {
+          if (videoId) {
+            const container = this.querySelector('.thumbnail-container');
+            container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                                    allow="autoplay; encrypted-media" allowfullscreen 
+                                    style="width:100%; height:100%; border:none; position:absolute; top:0; left:0;"></iframe>`;
+            // הסרת פונקציית הלחיצה לאחר שהסרטון נטען
+            this.onclick = null; 
+          }
+        };
 
-                        card.innerHTML = `
-                            <div class="thumbnail-container">
-                                <div class="thumbnail-bg" style="background-image: url('${thumbUrl}');"></div>
-                                <div class="play-button"></div>
-                            </div>
-                            <div class="card-content">
-                                <h3 class="card-title">${item.title || "פרויקט חדש"}</h3>
-                                <p class="card-role">${item.role || ""}</p>
-                            </div>`;
-                        portfolioGrid.appendChild(card);
-                    });
+        card.innerHTML = `
+          <div class="thumbnail-container" style="position: relative; width: 100%; padding-top: 56.25%; overflow: hidden;">
+            <div class="thumbnail-bg" style="background-image: url('${thumbUrl}'); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;"></div>
+            <div class="play-button"></div>
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">${item.title || "פרויקט חדש"}</h3>
+            <p class="card-role">${item.role || ""}</p>
+          </div>
+        `;
+        portfolioGrid.appendChild(card);
+      });
                 }
                 console.log("✅ האתר סונכרן!");
             });
