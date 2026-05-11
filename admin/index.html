@@ -61,6 +61,15 @@
     <textarea id="s3_desc" rows="3" oninput="updatePreview()"></textarea>
   </div>
 
+  <!-- YouTube Embed -->
+  <div class="section">
+    <div class="section-header">
+      <h2>הטמעת סרטון יוטיוב</h2>
+    </div>
+    <label>הטמעת סרטון יוטיוב</label>
+    <textarea id="youtubeEmbed" rows="4" oninput="updatePreview()"></textarea>
+  </div>
+
   <!-- Portfolio -->
   <div class="section">
     <div class="section-header">
@@ -80,6 +89,7 @@
     <h2 id="previewHeroSubtitle">תיאור ראשי</h2>
     <div id="previewServices"></div>
     <div id="previewPortfolio"></div>
+    <div id="previewYoutube"></div>
   </div>
 
   <script>
@@ -178,6 +188,10 @@
           <hr>
         `;
       });
+
+      // עדכון תצוגה מקדימה עבור סרטון יוטיוב
+      const youtubeEmbed = document.getElementById("youtubeEmbed").value || '';
+      document.getElementById("previewYoutube").innerHTML = youtubeEmbed;
     }
 
     async function saveAllContent() {
@@ -194,6 +208,7 @@
           s3: { title: document.getElementById("s3_title").value, desc: document.getElementById("s3_desc").value }
         },
         portfolio: portfolioItems,
+        youtubeEmbed: document.getElementById("youtubeEmbed").value,
         lastUpdated: Date.now()
       };
 
