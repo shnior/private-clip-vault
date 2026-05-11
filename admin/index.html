@@ -7,8 +7,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <style>
-    body { font-family: 'Heebo', Arial, sans-serif; background: #0a0507; color: #f4f4f4; padding: 30px; max-width: 1200px; margin: 0 auto; line-height: 1.6; }
-    h1 { color: #D4AF37; text-align: center; }
+    body { font-family: 'Heebo', Arial, sans-serif; background: #0a0507; color: #f4f4f4; padding: 30px; max-width: 1300px; margin: 0 auto; }
+    h1 { color: #D4AF37; text-align: center; margin-bottom: 30px; }
     .section { background: #1a0f12; padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #7a1528; }
     label { display: block; margin: 12px 0 6px; font-weight: bold; color: #D4AF37; }
     input, textarea { width: 100%; padding: 12px; background: #111; border: 1px solid #7a1528; color: white; border-radius: 8px; }
@@ -22,18 +22,39 @@
 <body>
   <h1>🛠 מנהל תוכן - שניאור אייזנבך</h1>
 
+  <!-- Hero -->
   <div class="section">
-    <h2>לוגו & Hero</h2>
+    <h2>לוגו & Hero Section</h2>
     <label>טקסט לוגו</label>
     <input type="text" id="logoText">
-    <label>כותרת ראשית</label>
+    <label>כותרת ראשית (H1)</label>
     <input type="text" id="heroTitle">
-    <label>תיאור ראשי</label>
+    <label>תיאור ראשי (H2)</label>
     <textarea id="heroSubtitle" rows="3"></textarea>
   </div>
 
+  <!-- Services -->
   <div class="section">
-    <h2>תיק עבודות</h2>
+    <h2>שירותים</h2>
+    <label>שירות 1 - כותרת</label>
+    <input type="text" id="s1_title">
+    <label>שירות 1 - תיאור</label>
+    <textarea id="s1_desc" rows="3"></textarea>
+
+    <label>שירות 2 - כותרת</label>
+    <input type="text" id="s2_title">
+    <label>שירות 2 - תיאור</label>
+    <textarea id="s2_desc" rows="3"></textarea>
+
+    <label>שירות 3 - כותרת</label>
+    <input type="text" id="s3_title">
+    <label>שירות 3 - תיאור</label>
+    <textarea id="s3_desc" rows="3"></textarea>
+  </div>
+
+  <!-- Portfolio -->
+  <div class="section">
+    <h2>תיק עבודות - פרויקטים</h2>
     <div id="portfolioContainer"></div>
     <button onclick="addPortfolioItem()">➕ הוסף פרויקט חדש</button>
   </div>
@@ -68,8 +89,8 @@
           <input type="text" value="${item.role || ''}" onchange="portfolioItems[${i}].role = this.value">
 
           <label>קישור ליוטיוב</label>
-          <input type="text" value="${item.youtube || ''}" onchange="portfolioItems[${i}].youtube = this.value" placeholder="https://youtube.com/watch?v=...">
-          
+          <input type="text" value="${item.youtube || ''}" onchange="portfolioItems[${i}].youtube = this.value" placeholder="https://www.youtube.com/watch?v=...">
+
           <button onclick="deletePortfolioItem(${i})" style="background:#c00; width:auto; margin-top:10px;">🗑 מחק פרויקט</button>
         `;
         container.appendChild(div);
@@ -82,7 +103,7 @@
     }
 
     function deletePortfolioItem(i) {
-      if (confirm("למחוק?")) {
+      if (confirm("למחוק פרויקט זה?")) {
         portfolioItems.splice(i, 1);
         renderPortfolio();
       }
@@ -91,10 +112,18 @@
     function loadContent() {
       db.ref('siteContent').once('value', (snapshot) => {
         const d = snapshot.val() || {};
-        
+
         document.getElementById("logoText").value = d.logoText || "שניאור אייזנבך";
         document.getElementById("heroTitle").value = d.heroTitle || "הסאונד. הוויזואל. ההפקה.";
         document.getElementById("heroSubtitle").value = d.heroSubtitle || "קלידן, מפיק מוזיקלי, עורך וידאו ואנימטור";
+
+        // שירותים
+        document.getElementById("s1_title").value = d.services?.s1?.title || "לייב על הבמה";
+        document.getElementById("s1_desc").value = d.services?.s1?.desc || "";
+        document.getElementById("s2_title").value = d.services?.s2?.title || "עריכה והפקות וידאו";
+        document.getElementById("s2_desc").value = d.services?.s2?.desc || "";
+        document.getElementById("s3_title").value = d.services?.s3?.title || "הנפשה וכלי AI";
+        document.getElementById("s3_desc").value = d.services?.s3?.desc || "";
 
         portfolioItems = d.portfolio || [];
         renderPortfolio();
@@ -105,17 +134,24 @@
       const status = document.getElementById("status");
       status.textContent = "שומר...";
 
+      const data = {
+        logoText: document.getElementById("logoText").value,
+        heroTitle: document.getElementById("heroTitle").value,
+        heroSubtitle: document.getElementById("heroSubtitle").value,
+        services: {
+          s1: { title: document.getElementById("s1_title").value, desc: document.getElementById("s1_desc").value },
+          s2: { title: document.getElementById("s2_title").value, desc: document.getElementById("s2_desc").value },
+          s3: { title: document.getElementById("s3_title").value, desc: document.getElementById("s3_desc").value }
+        },
+        portfolio: portfolioItems,
+        lastUpdated: Date.now()
+      };
+
       try {
-        await db.ref('siteContent').set({
-          logoText: document.getElementById("logoText").value,
-          heroTitle: document.getElementById("heroTitle").value,
-          heroSubtitle: document.getElementById("heroSubtitle").value,
-          portfolio: portfolioItems,
-          lastUpdated: Date.now()
-        });
-        status.innerHTML = '<span class="success">✅ נשמר בהצלחה!</span>';
+        await db.ref('siteContent').set(data);
+        status.innerHTML = '<span class="success">✅ כל השינויים נשמרו בהצלחה!</span>';
       } catch (e) {
-        status.innerHTML = '❌ שגיאה';
+        status.innerHTML = '❌ שגיאה - ראה Console';
         console.error(e);
       }
     }
