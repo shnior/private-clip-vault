@@ -339,7 +339,72 @@
         document.getElementById('hero-title').value = siteData.general.title;
         document.getElementById('hero-subtitle').value = siteData.general.subtitle;
         document.getElementById('contact-phone').value = siteData.general.phone;
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
+  // הגדרות ה-Firebase שלך
+  const firebaseConfig = {
+    apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
+    authDomain: "shnior-studio.firebaseapp.com",
+    databaseURL: "https://shnior-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "shnior-studio",
+    storageBucket: "shnior-studio.firebasestorage.app",
+    messagingSenderId: "163064507259",
+    appId: "1:163064507259:web:3fb46c6795eba5b84f6bde",
+    measurementId: "G-94VC2XF4SF"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const contentRef = ref(db, 'siteContent');
+
+  let siteData = {};
+
+  // משיכת נתונים ראשונית מהענן
+  onValue(contentRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      siteData = data;
+      updateUI(); // פונקציה שתעדכן את השדות בטפסים
+    }
+  });
+
+  // פונקציית שמירה כללית לענן
+  async function saveToFirebase() {
+    try {
+        await set(contentRef, siteData);
+        alert("הנתונים סונכרנו לענן בהצלחה!");
+    } catch (e) {
+        console.error(e);
+        alert("שגיאה בשמירה");
+    }
+  }
+
+  // עדכון השדות בלוח הבקרה לפי הנתונים מהענן
+  function updateUI() {
+    if(siteData.general) {
+        document.getElementById('hero-title').value = siteData.general.title || "";
+        document.getElementById('hero-subtitle').value = siteData.general.subtitle || "";
+        document.getElementById('contact-phone').value = siteData.general.phone || "";
+    }
+    // כאן תוכל להוסיף קריאות לרינדור הטבלאות (renderServices וכו')
+  }
+
+  // חשיפת הפונקציות ל-HTML (בגלל שזה type="module")
+  window.saveGeneral = () => {
+    siteData.general = {
+      title: document.getElementById('hero-title').value,
+      subtitle: document.getElementById('hero-subtitle').value,
+      phone: document.getElementById('contact-phone').value
+    };
+    saveToFirebase();
+  };
+
+  window.showSection = (sectionId) => {
+    document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
+    document.getElementById('section-' + sectionId).style.display = 'block';
+  };
     </script>
 </body>
 </html>
