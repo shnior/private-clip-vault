@@ -61,15 +61,6 @@
     <textarea id="s3_desc" rows="3" oninput="updatePreview()"></textarea>
   </div>
 
-  <!-- YouTube Embed -->
-  <div class="section">
-    <div class="section-header">
-      <h2>הטמעת סרטון יוטיוב</h2>
-    </div>
-    <label>הטמעת סרטון יוטיוב</label>
-    <textarea id="youtubeEmbed" rows="4" oninput="updatePreview()"></textarea>
-  </div>
-
   <!-- Portfolio -->
   <div class="section">
     <div class="section-header">
@@ -118,8 +109,9 @@
           <label>תפקיד / תיאור</label>
           <input type="text" value="${item.role || ''}" onchange="portfolioItems[${i}].role = this.value; updatePreview()">
 
-          <label>קישור ליוטיוב</label>
-          <input type="text" value="${item.youtube || ''}" onchange="portfolioItems[${i}].youtube = this.value; updatePreview()" placeholder="https://www.youtube.com/watch?v=...">
+          <label>הטמעת סרטון יוטיוב</label>
+        <textarea onchange="portfolioItems[${i}].youtubeEmbed = this.value; updatePreview()">${item.youtubeEmbed || ''}</textarea>
+
 
           <button class="btn-delete" onclick="deletePortfolioItem(${i})">🗑 מחק פרויקט</button>
         `;
