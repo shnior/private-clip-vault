@@ -94,21 +94,31 @@
         .service-card h3 { color: var(--gold-solid); font-size: 1.8rem; margin-top: 0; margin-bottom: 20px; }
         .service-card p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin: 0; }
 
-        /* --- תיק עבודות --- */
+/* --- תיק עבודות --- */
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .portfolio-card { background-color: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; overflow: hidden; transition: all 0.4s ease; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .portfolio-card:hover { transform: translateY(-10px); border-color: var(--gold-solid); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px var(--burgundy-glow); }
-        .thumbnail-container { position: relative; width: 100%; padding-top: 100%; background-color: #000; overflow: hidden; }
+        
+        .thumbnail-container { 
+            position: relative; 
+            width: 100%; 
+            padding-top: 56.25%; /* שינוי מ-100% ל-56.25% כדי שזה לא יהיה ענק */
+            background-color: #000; 
+            overflow: hidden; 
+        }
+        
         .thumbnail-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.7; transition: transform 0.6s ease, opacity 0.3s ease; filter: grayscale(20%); }
         .portfolio-card:hover .thumbnail-bg { opacity: 1; transform: scale(1.05); filter: grayscale(0%); }
+        
         .play-button { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: rgba(0, 0, 0, 0.5); border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .play-button::after { content: ''; display: block; border-style: solid; border-width: 12px 0 12px 20px; border-color: transparent transparent transparent white; margin-right: -5px; }
         .portfolio-card:hover .play-button { background: var(--gold-gradient); border-color: transparent; transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
         .portfolio-card:hover .play-button::after { border-color: transparent transparent transparent var(--bg-dark); }
+        
         .card-content { padding: 25px 20px; text-align: right; background: linear-gradient(to top, var(--card-bg), transparent); }
         .card-title { font-size: 1.2rem; font-weight: 700; color: var(--text-light); margin: 0 0 10px 0; }
         .card-role { font-size: 1rem; color: var(--gold-solid); margin: 0; }
-
+        
         /* --- פוטר --- */
         footer { background: #0a0204; padding: 80px 20px; text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.2); }
         .footer-logo { font-size: 30px; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
@@ -213,19 +223,16 @@
         <a href="https://wa.me/972000000000" target="_blank" class="cta-btn">שלח הודעת וואטסאפ</a>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
     <script>
-        // 1. קונפיגורציה (Firebase Config)
+        // 1. קונפיגורציה
         const firebaseConfig = {
             apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
             authDomain: "shnior-studio.firebaseapp.com",
             databaseURL: "https://shnior-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "shnior-studio",
-            storageBucket: "shnior-studio.firebasestorage.app",
-            messagingSenderId: "163064507259",
-            appId: "1:163064507259:web:3fb46c6795eba5b84f6bde"
+            projectId: "shnior-studio"
         };
 
         // 2. אתחול
@@ -234,21 +241,16 @@
 
         // 3. פונקציית הטעינה
         function loadDynamicContent() {
-            console.log("🔄 מסנכרן נתונים מ-Firebase...");
+            console.log("🔄 מסנכרן נתונים...");
 
             db.ref('siteContent').once('value', (snapshot) => {
                 const data = snapshot.val();
-                if (!data) {
-                    console.warn("⚠️ לא נמצאו נתונים ב-Firebase");
-                    return;
-                }
+                if (!data) return;
 
-                // עדכון לוגו
+                // עדכון לוגו וטקסטים
                 if (data.logoText) {
                     document.querySelectorAll('.logo, .footer-logo').forEach(el => el.textContent = data.logoText);
                 }
-
-                // עדכון כותרות Hero
                 if (data.heroTitle) {
                     const h1 = document.querySelector('.hero h1');
                     if (h1) h1.textContent = data.heroTitle;
@@ -261,25 +263,17 @@
                 // עדכון פורטפוליו
                 const portfolioGrid = document.querySelector('.portfolio-grid');
                 if (portfolioGrid && data.portfolio) {
-                    portfolioGrid.innerHTML = ''; // ניקוי הקיים
-                    
-                    // המרה למערך למקרה שהנתונים נשמרו כאובייקט
+                    portfolioGrid.innerHTML = ''; 
                     const items = Array.isArray(data.portfolio) ? data.portfolio : Object.values(data.portfolio);
 
                     items.forEach(item => {
                         if (!item) return;
-
-                        // חילוץ ID של יוטיוב בצורה בטוחה יותר
                         let videoId = "";
                         const url = item.youtubeEmbed || "";
                         
-                        if (url.includes("v=")) {
-                            videoId = url.split("v=")[1].split("&")[0];
-                        } else if (url.includes("youtu.be/")) {
-                            videoId = url.split("/").pop().split("?")[0];
-                        } else if (url.includes("embed/")) {
-                            videoId = url.split("embed/")[1].split(/[? "]/)[0];
-                        }
+                        if (url.includes("v=")) videoId = url.split("v=")[1].split("&")[0];
+                        else if (url.includes("youtu.be/")) videoId = url.split("/").pop().split("?")[0];
+                        else if (url.includes("embed/")) videoId = url.split("embed/")[1].split(/[? "]/)[0];
 
                         const thumbUrl = videoId 
                             ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
@@ -287,9 +281,7 @@
 
                         const card = document.createElement('div');
                         card.className = 'portfolio-card';
-                        card.onclick = () => {
-                            if (videoId) window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-                        };
+                        card.onclick = () => { if (videoId) window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank'); };
 
                         card.innerHTML = `
                             <div class="thumbnail-container">
@@ -299,18 +291,15 @@
                             <div class="card-content">
                                 <h3 class="card-title">${item.title || "פרויקט חדש"}</h3>
                                 <p class="card-role">${item.role || ""}</p>
-                            </div>
-                        `;
+                            </div>`;
                         portfolioGrid.appendChild(card);
                     });
                 }
                 console.log("✅ האתר סונכרן!");
-            }, (error) => {
-                console.error("❌ שגיאה בטעינה:", error);
             });
         }
 
-        // 4. הרצה בטעינת הדף
+        // 4. הפעלה בטעינה
         window.addEventListener('DOMContentLoaded', loadDynamicContent);
     </script>
 </body>
