@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מנהל תוכן</title>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background:#111; color:#fff; padding:40px; text-align:center; }
+    input, textarea { width: 80%; padding:15px; margin:10px; background:#222; color:white; border:1px solid #D4AF37; border-radius:8px; }
+    button { padding:15px 40px; font-size:18px; background:#D4AF37; color:black; border:none; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h1>מנהל תוכן - שניאור אייזנבך</h1>
+  <p>מנסה להתחבר ל-Firebase...</p>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
+      authDomain: "shnior-studio.firebaseapp.com",
+      projectId: "shnior-studio",
+      storageBucket: "shnior-studio.firebasestorage.app",
+      messagingSenderId: "163064507259",
+      appId: "1:163064507259:web:3fb46c6795eba5b84f6bde"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    alert("✅ Firebase נטען! אם אתה רואה את זה - המנהל עובד טכנית.");
+    
+    // ניסיון שמירה
+    db.collection("general").doc("main").set({ test: "עובד" }, { merge: true })
+      .then(() => console.log("✅ Firestore עובד"))
+      .catch(e => console.error("❌ Firestore שגיאה:", e));
+  </script>
+</body>
+</html>
