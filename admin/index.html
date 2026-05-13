@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ניהול תוכן | Shnior Eisenbach</title>
+    <title>ניהול תוכן | Shneior Eisenbach</title>
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -27,7 +27,7 @@
         h1 { color: var(--primary); text-align: center; font-size: 2.5rem; margin-bottom: 40px; }
 
         .section { background: var(--card-bg); padding: 30px; border-radius: 16px; margin-bottom: 30px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .section-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .section-header h2 { margin: 0; font-size: 1.5rem; color: var(--primary); }
 
         label { display: block; margin: 15px 0 8px; font-weight: 500; color: var(--text-muted); font-size: 0.9rem; }
@@ -65,7 +65,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div>
                 <label>טקסט לוגו (השם שלך)</label>
-                <input type="text" id="logoText" placeholder="לדוגמה: Shnior Eisenbach">
+                <input type="text" id="logoText" placeholder="לדוגמה: Shneior Eisenbach">
             </div>
             <div>
                 <label>החלפת לוגו (תמונה עד 400KB)</label>
@@ -87,9 +87,23 @@
     <div class="section">
         <div class="section-header">
             <h2><i class="fas fa-film"></i> תיק עבודות</h2>
-            <button class="btn" onclick="addPortfolioItem()">
-                <i class="fas fa-plus"></i> הוסף פרויקט
-            </button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <!-- כפתור ייצוא (הורדה) -->
+                <button class="btn" style="background: #4CAF50; color: white;" onclick="exportPortfolio()">
+                    <i class="fas fa-download"></i> גיבוי רשימה
+                </button>
+                
+                <!-- שדה קובץ מוסתר וייבוא (העלאה) -->
+                <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importPortfolio(event)">
+                <button class="btn" style="background: #2196F3; color: white;" onclick="document.getElementById('importFile').click()">
+                    <i class="fas fa-upload"></i> ייבוא גיבוי
+                </button>
+
+                <!-- כפתור ההוספה -->
+                <button class="btn" onclick="addPortfolioItem()">
+                    <i class="fas fa-plus"></i> הוסף פרויקט
+                </button>
+            </div>
         </div>
         <div id="portfolioContainer"></div>
     </div>
@@ -215,7 +229,59 @@
         }
     }
 
+    // ------------------------------------
+    // פונקציות ייצוא וייבוא (גיבוי רשימה)
+    // ------------------------------------
+    
+    function exportPortfolio() {
+        if (portfolioItems.length === 0) {
+            alert("אין פרויקטים לייצוא.");
+            return;
+        }
+        
+        const dataStr = JSON.stringify(portfolioItems, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.href = url;
+        downloadAnchorNode.download = "portfolio_backup.json";
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+        URL.revokeObjectURL(url);
+    }
+
+    function importPortfolio(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                
+                if (Array.isArray(importedData)) {
+                    if (confirm("האם אתה בטוח? פעולה זו תחליף את הרשימה שמוצגת כרגע (כדי לשמור סופית בשרת יהיה עליך ללחוץ על 'שמור את כל השינויים').")) {
+                        portfolioItems = importedData;
+                        renderPortfolio();
+                        alert("הנתונים יובאו בהצלחה! אל תשכח ללחוץ על 'שמור את כל השינויים' כדי לעדכן את מסד הנתונים.");
+                    }
+                } else {
+                    alert("שגיאה: הקובץ לא תקין או שאינו מכיל רשימת פרויקטים.");
+                }
+            } catch (error) {
+                alert("שגיאה בקריאת הקובץ. ודא שזהו קובץ גיבוי תקין (JSON).");
+            }
+        };
+        reader.readAsText(file);
+        
+        event.target.value = ""; 
+    }
+
+    // ------------------------------------
     // שמירה
+    // ------------------------------------
     async function saveAllContent() {
         const loader = document.getElementById('loader');
         const fileInput = document.getElementById('logoFile');
