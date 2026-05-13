@@ -141,12 +141,40 @@
             perspective: 1000px; 
             cursor: pointer;
             transition: transform 0.4s cubic-bezier(0.4, 0.2, 0.2, 1); /* הגדלה חלקה */
+            position: relative; /* חובה עבור אנימציית העשן */
         }
 
         /* הגדלה ב-10% בזמן ריחוף */
         .service-card:hover {
             transform: scale(1.1);
         }
+
+        /* ---------------------------------------------------
+           אפקט עשן זהב שיוצא מסביב לעיגול (20% שקיפות)
+           --------------------------------------------------- */
+        .service-card::before, .service-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            /* צבע זהב עם 20% שקיפות */
+            border: 20px solid rgba(212, 175, 55, 0.2); 
+            filter: blur(15px); /* טשטוש עמוק למראה של עשן */
+            animation: goldSmokeEmit 4s infinite ease-out;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .service-card::after {
+            animation-delay: 2s; /* גל עשן שני שיוצא באמצע ליצירת רצף */
+        }
+
+        @keyframes goldSmokeEmit {
+            0% { transform: scale(0.85); opacity: 0; }
+            40% { opacity: 1; }
+            100% { transform: scale(1.4); opacity: 0; } /* העשן גדל ומתפוגג */
+        }
+        /* --------------------------------------------------- */
 
         .service-card-inner {
             position: relative;
