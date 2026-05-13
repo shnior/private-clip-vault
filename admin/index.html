@@ -36,16 +36,29 @@
         
         .btn { background: var(--primary); color: #000; padding: 12px 25px; font-size: 1rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
         .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .btn-delete { background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border: 1px solid #ff4d4d; padding: 8px 15px; }
-        .btn-delete:hover { background: #ff4d4d; color: white; }
 
-        /* כפתורי הזזה למעלה למטה */
-        .item-actions { display: flex; gap: 10px; margin-top: 15px; align-items: center; }
-        .btn-move { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; cursor: pointer; border-radius: 8px; transition: 0.3s; font-size: 1rem; }
+        /* עיצוב קומפקטי לפריט תיק עבודות */
+        .portfolio-item { 
+            border: 1px solid var(--border); 
+            padding: 12px 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            background: #252525; 
+            transition: transform 0.2s;
+        }
+
+        /* הקטנת השדות והתוויות בתוך הפריטים */
+        .portfolio-item label { margin: 0 0 5px 0; font-size: 0.8rem; }
+        .portfolio-item input { padding: 8px 10px; font-size: 0.9rem; }
+
+        /* כפתורי הזזה ומחיקה - קומפקטיים */
+        .item-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+        .btn-move { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 6px 12px; cursor: pointer; border-radius: 8px; transition: 0.3s; font-size: 0.85rem; }
         .btn-move:hover:not(:disabled) { background: var(--primary); color: #000; }
         .btn-move:disabled { opacity: 0.3; cursor: not-allowed; }
+        .btn-delete { background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border: 1px solid #ff4d4d; padding: 6px 12px; font-size: 0.85rem; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn-delete:hover { background: #ff4d4d; color: white; }
 
-        .portfolio-item { border: 1px solid var(--border); padding: 20px; margin: 20px 0; border-radius: 12px; background: #252525; transition: transform 0.2s;}
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #4CAF50; color: white; padding: 12px 30px; border-radius: 50px; display: none; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         
         .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 2000; }
@@ -99,9 +112,12 @@
                     <i class="fas fa-upload"></i> ייבוא גיבוי
                 </button>
 
-                <!-- כפתור ההוספה -->
-                <button class="btn" onclick="addPortfolioItem()">
-                    <i class="fas fa-plus"></i> הוסף פרויקט
+                <!-- כפתורי הוספה להתחלה ולסוף -->
+                <button class="btn" onclick="addPortfolioItemTop()">
+                    <i class="fas fa-arrow-up"></i> הוסף להתחלה
+                </button>
+                <button class="btn" onclick="addPortfolioItemBottom()">
+                    <i class="fas fa-arrow-down"></i> הוסף לסוף
                 </button>
             </div>
         </div>
@@ -163,7 +179,7 @@
             const disableDown = i === portfolioItems.length - 1 ? "disabled" : "";
 
             div.innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end;">
                     <div>
                         <label>שם הפרויקט</label>
                         <input type="text" value="${item.title || ''}" onchange="updateItem(${i}, 'title', this.value)" placeholder="למשל: קליפ חתונה">
@@ -172,15 +188,15 @@
                         <label>תפקיד</label>
                         <input type="text" value="${item.role || ''}" onchange="updateItem(${i}, 'role', this.value)" placeholder="למשל: עורך ראשי">
                     </div>
+                    <div>
+                        <label>מזהה יוטיוב (אחרי v=)</label>
+                        <input type="text" value="${item.youtubeEmbed || ''}" onchange="updateItem(${i}, 'youtubeEmbed', this.value)" placeholder="לדוגמה: dQw4w9WgXcQ">
+                    </div>
                 </div>
-                <label>מזהה וידאו מיוטיוב (הקוד שאחרי ה-v=)</label>
-                <input type="text" style="margin-top:5px;" value="${item.youtubeEmbed || ''}" 
-                       onchange="updateItem(${i}, 'youtubeEmbed', this.value)" 
-                       placeholder="לדוגמה: dQw4w9WgXcQ">
                 
                 <div class="item-actions">
-                    <button class="btn btn-delete" onclick="deletePortfolioItem(${i})">
-                        <i class="fas fa-trash"></i> מחק פרויקט
+                    <button class="btn-delete" onclick="deletePortfolioItem(${i})">
+                        <i class="fas fa-trash"></i> מחק
                     </button>
                     <button class="btn-move" onclick="moveItemUp(${i})" ${disableUp} title="הזז למעלה">
                         <i class="fas fa-arrow-up"></i>
@@ -216,9 +232,15 @@
         portfolioItems[index][field] = value;
     }
 
-    function addPortfolioItem() {
-        // מוסיף תמיד לתחילת הרשימה (למעלה) במקום לסוף
+    // פונקציה להוספה לראש הרשימה
+    function addPortfolioItemTop() {
         portfolioItems.unshift({title: "", role: "", youtubeEmbed: ""});
+        renderPortfolio();
+    }
+
+    // פונקציה להוספה לסוף הרשימה
+    function addPortfolioItemBottom() {
+        portfolioItems.push({title: "", role: "", youtubeEmbed: ""});
         renderPortfolio();
     }
 
