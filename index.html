@@ -133,13 +133,13 @@
         }
 
         /* =======================================================
-           אנימציית ציר זמן מצד שמאל (חדש)
+           אנימציית ציר זמן מצד שמאל (מעודכן)
            ======================================================= */
         .scroll-timeline-container {
             position: fixed;
             left: 30px; /* מיקום בצד שמאל */
-            top: 0;
-            height: 100vh;
+            top: 5vh; /* רווח מלמעלה */
+            height: 90vh; /* גובה מקוצר כדי שלא יגיע לרצפה */
             width: 2px;
             z-index: 990; /* מתחת לתפריט אבל מעל התוכן */
             pointer-events: none;
@@ -167,11 +167,20 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
-            color: var(--gold-solid);
-            font-size: 1.5rem;
-            text-shadow: 0 0 15px var(--gold-solid);
-            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column; /* סידור החיצים בטור */
+            gap: 5px; /* מרווח קטן בין החיצים */
             top: 0%;
+            transition: top 0.1s ease-out; /* תנועה חלקה יותר */
+        }
+
+        /* עיצוב החץ המלא */
+        .timeline-arrow i {
+            color: var(--gold-solid);
+            font-size: 1.2rem; /* גודל החיצים */
+            text-shadow: 0 0 10px var(--gold-solid);
+            /* שימוש באייקון מלא */
+            display: block;
         }
 
         /* הסתרה במסכים קטנים כדי לא להפריע לטקסט */
@@ -431,11 +440,17 @@
         <div class="loader-text">טוען נתונים...</div>
     </div>
 
-    <!-- ציר זמן זהב מצד שמאל -->
+    <!-- ציר זמן זהב מצד שמאל (מעודכן עם 5 חיצים) -->
     <div class="scroll-timeline-container">
         <div class="timeline-track"></div>
         <div class="timeline-progress" id="timeline-progress"></div>
-        <div class="timeline-arrow" id="timeline-arrow"><i class="fas fa-chevron-down"></i></div>
+        <div class="timeline-arrow" id="timeline-arrow">
+            <i class="fas fa-caret-down"></i>
+            <i class="fas fa-caret-down"></i>
+            <i class="fas fa-caret-down"></i>
+            <i class="fas fa-caret-down"></i>
+            <i class="fas fa-caret-down"></i>
+        </div>
     </div>
 
     <canvas id="magic-cursor-canvas"></canvas>
@@ -537,9 +552,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
     <script>
-        // ==================== אנימציית ציר זמן (Timeline Scroll) ====================
+        // ==================== אנימציית ציר זמן (Timeline Scroll) מעודכנת ====================
         const timelineProgress = document.getElementById('timeline-progress');
         const timelineArrow = document.getElementById('timeline-arrow');
+        const arrowIcons = timelineArrow.querySelectorAll('i'); // בחירת כל חמשת החיצים
         let lastScrollTop = 0;
 
         window.addEventListener('scroll', () => {
@@ -547,18 +563,21 @@
             let docHeight = document.documentElement.scrollHeight - window.innerHeight;
             let scrollPercent = (scrollTop / docHeight) * 100;
             
-            // עדכון גובה הפס הזהוב
+            // עדכון גובה הפס ומיקום קבוצת החיצים
             timelineProgress.style.height = scrollPercent + '%';
-            // עדכון מיקום החץ
             timelineArrow.style.top = scrollPercent + '%';
 
-            // שינוי כיוון החץ לפי כיוון הגלילה
+            // שינוי כיוון לכל החיצים יחד
             if (scrollTop > lastScrollTop) {
-                // גוללים למטה
-                timelineArrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                // גוללים למטה - חץ מלא למטה
+                arrowIcons.forEach(icon => {
+                    icon.className = 'fas fa-caret-down';
+                });
             } else {
-                // גוללים למעלה
-                timelineArrow.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                // גוללים למעלה - חץ מלא למעלה
+                arrowIcons.forEach(icon => {
+                    icon.className = 'fas fa-caret-up';
+                });
             }
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
         });
