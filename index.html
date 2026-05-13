@@ -228,11 +228,26 @@
 
         .service-card:hover { transform: scale(1.1); }
 
-        /* עשן זהב */
+        /* עשן זהב - מוסתר כברירת מחדל */
         .service-card::before, .service-card::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 50%; border: 20px solid rgba(212, 175, 55, 0.2); 
-            filter: blur(15px); animation: goldSmokeEmit 4s infinite ease-out; z-index: -1; pointer-events: none;
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        border-radius: 50%; border: 20px solid rgba(212, 175, 55, 0.2); 
+        filter: blur(15px); 
+        opacity: 0; /* מוסתר */
+        transition: opacity 0.4s ease; /* מעבר חלק בכניסה */
+        z-index: -1; pointer-events: none;
+        }
+
+        /* הפעלת האנימציה והצגה רק בריחוף */
+        .service-card:hover::before {
+        opacity: 1;
+        animation: goldSmokeEmit 4s infinite ease-out;
+        }
+
+        .service-card:hover::after {
+            opacity: 1;
+            animation: goldSmokeEmit 4s infinite ease-out;
+            animation-delay: 2s;
         }
 
         .service-card::after { animation-delay: 2s; }
