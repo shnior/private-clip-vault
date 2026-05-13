@@ -178,19 +178,24 @@
             const disableUp = i === 0 ? "disabled" : "";
             const disableDown = i === portfolioItems.length - 1 ? "disabled" : "";
 
+            // אבטחת התווים כדי שקוד HTML שמור לא ישבור את שדות הקלט
+            const safeTitle = (item.title || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const safeRole = (item.role || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const safeEmbed = (item.youtubeEmbed || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
             div.innerHTML = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end;">
                     <div>
                         <label>שם הפרויקט</label>
-                        <input type="text" value="${item.title || ''}" onchange="updateItem(${i}, 'title', this.value)" placeholder="למשל: קליפ חתונה">
+                        <input type="text" value="${safeTitle}" onchange="updateItem(${i}, 'title', this.value)" placeholder="למשל: קליפ חתונה">
                     </div>
                     <div>
                         <label>תפקיד</label>
-                        <input type="text" value="${item.role || ''}" onchange="updateItem(${i}, 'role', this.value)" placeholder="למשל: עורך ראשי">
+                        <input type="text" value="${safeRole}" onchange="updateItem(${i}, 'role', this.value)" placeholder="למשל: עורך ראשי">
                     </div>
                     <div>
                         <label>מזהה יוטיוב (אחרי v=)</label>
-                        <input type="text" value="${item.youtubeEmbed || ''}" onchange="updateItem(${i}, 'youtubeEmbed', this.value)" placeholder="לדוגמה: dQw4w9WgXcQ">
+                        <input type="text" id="yt-input-${i}" value="${safeEmbed}" onchange="updateItem(${i}, 'youtubeEmbed', this.value)" placeholder="לדוגמה: dQw4w9WgXcQ">
                     </div>
                 </div>
                 
@@ -228,7 +233,23 @@
         }
     }
 
+    // פונקציה חדשה: מחלצת אוטומטית מזהה של יוטיוב מתוך קישור מלא או קוד iframe
+    function extractYouTubeID(url) {
+        if (!url) return "";
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+        return match ? match[1] : url;
+    }
+
     function updateItem(index, field, value) {
+        // אם מעדכנים את שדה יוטיוב, נפעיל את החילוץ החכם
+        if (field === 'youtubeEmbed') {
+            value = extractYouTubeID(value);
+            // נעדכן את מה שמוצג בשדה מיד לאחר ההדבקה כדי להציג את החיתוך
+            const inputElement = document.getElementById(`yt-input-${index}`);
+            if (inputElement) {
+                inputElement.value = value;
+            }
+        }
         portfolioItems[index][field] = value;
     }
 
