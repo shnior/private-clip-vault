@@ -40,7 +40,7 @@
         }
 
         /* =======================================================
-           עיצוב מסך הטעינה (Loader) - אקולייזר סאונד
+           עיצוב מסך הטעינה (Loader)
            ======================================================= */
         #site-loader {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -77,8 +77,10 @@
         }
 
         #site-loader.hidden { opacity: 0; visibility: hidden; }
-        /* ======================================================= */
 
+        /* =======================================================
+           תפריט עליון עם קו זהב (Scroll Spy Effect)
+           ======================================================= */
         header {
             position: fixed; width: 100%; top: 0;
             background: rgba(7, 7, 9, 0.85); backdrop-filter: blur(15px);
@@ -87,7 +89,7 @@
 
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 50px; max-width: 1400px; margin: 0 auto;
+            padding: 10px 50px; max-width: 1400px; margin: 0 auto;
         }
 
         .logo {
@@ -96,8 +98,47 @@
         }
 
         .nav-links { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; }
-        .nav-links a { color: var(--text-light); text-decoration: none; font-size: 1.1rem; transition: color 0.3s; font-weight: 500; }
-        .nav-links a:hover { color: var(--gold-solid); text-shadow: 0 0 10px var(--burgundy-glow); }
+        
+        /* עיצוב הקישורים בתפריט */
+        .nav-links a { 
+            color: var(--text-light); 
+            text-decoration: none; 
+            font-size: 1.1rem; 
+            transition: color 0.3s ease; 
+            font-weight: 500;
+            position: relative;
+            padding: 15px 0; /* מרווח פנימי כדי שיהיה מקום לקו למעלה */
+            display: inline-block;
+        }
+
+        /* יצירת קו הזהב הנסתר מעל הטקסט */
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0; /* צמוד לחלק העליון של הקישור */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; /* רוחב התחלתי 0 (נסתר) */
+            height: 2px;
+            background: var(--gold-solid);
+            transition: width 0.3s ease; /* אנימציית פתיחה חלקה */
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.8); /* הילת זהב קלה לקו */
+        }
+
+        /* כאשר מרחפים על הקישור או כאשר הדף פעיל (סק롤) */
+        .nav-links a:hover::before,
+        .nav-links a.active::before {
+            width: 100%; /* הקו מתרחב למלוא הרוחב */
+        }
+
+        /* שינוי צבע הטקסט עצמו כשפעיל/בריחוף */
+        .nav-links a:hover,
+        .nav-links a.active { 
+            color: var(--gold-solid); 
+            text-shadow: 0 0 10px var(--burgundy-glow); 
+        }
+
+        /* ======================================================= */
 
         .hero {
             height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
@@ -129,9 +170,6 @@
         .section-title { text-align: center; font-size: 3rem; margin-bottom: 60px; font-weight: 700; color: var(--text-light); }
         .section-title span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* =======================================================
-           כרטיסיות שירותים מתהפכות - קו נקי מזהב ואנימציה
-           ======================================================= */
         .services-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 40px; }
         
         .service-card {
@@ -140,41 +178,36 @@
             height: 260px;
             perspective: 1000px; 
             cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.4, 0.2, 0.2, 1); /* הגדלה חלקה */
-            position: relative; /* חובה עבור אנימציית העשן */
+            transition: transform 0.4s cubic-bezier(0.4, 0.2, 0.2, 1); 
+            position: relative; 
         }
 
-        /* הגדלה ב-10% בזמן ריחוף */
         .service-card:hover {
             transform: scale(1.1);
         }
 
-        /* ---------------------------------------------------
-           אפקט עשן זהב שיוצא מסביב לעיגול (20% שקיפות)
-           --------------------------------------------------- */
+        /* עשן זהב */
         .service-card::before, .service-card::after {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             border-radius: 50%;
-            /* צבע זהב עם 20% שקיפות */
             border: 20px solid rgba(212, 175, 55, 0.2); 
-            filter: blur(15px); /* טשטוש עמוק למראה של עשן */
+            filter: blur(15px); 
             animation: goldSmokeEmit 4s infinite ease-out;
             z-index: -1;
             pointer-events: none;
         }
 
         .service-card::after {
-            animation-delay: 2s; /* גל עשן שני שיוצא באמצע ליצירת רצף */
+            animation-delay: 2s; 
         }
 
         @keyframes goldSmokeEmit {
             0% { transform: scale(0.85); opacity: 0; }
             40% { opacity: 1; }
-            100% { transform: scale(1.4); opacity: 0; } /* העשן גדל ומתפוגג */
+            100% { transform: scale(1.4); opacity: 0; }
         }
-        /* --------------------------------------------------- */
 
         .service-card-inner {
             position: relative;
@@ -190,7 +223,6 @@
             transform: rotateY(180deg);
         }
 
-        /* עיצוב אחיד לקדמי ואחורי */
         .service-card-front, .service-card-back {
             position: absolute;
             width: 100%;
@@ -207,7 +239,6 @@
             overflow: hidden;
         }
 
-        /* FRONT - חלק קדמי (עם אנימציית סיבוב זהב) */
         .service-card-front {
             background: transparent;
         }
@@ -219,25 +250,22 @@
         }
 
         .service-card-front::after {
-            content: ''; position: absolute; inset: 3px; /* עובי המסגרת המסתובבת */
+            content: ''; position: absolute; inset: 3px;
             background: #070709; 
             border-radius: 50%; z-index: 1;
         }
 
-        /* דחיפת הטקסטים והאייקונים מעל מסגרת האנימציה */
         .service-card-front .service-icon,
         .service-card-front h3 {
             position: relative; z-index: 2;
         }
 
-        /* אייקונים בצבע זהב */
         .service-icon {
             font-size: 3.5rem;
             color: var(--gold-solid);
             margin-bottom: 15px;
         }
 
-        /* כותרת בקדמי */
         .service-card-front h3 { 
             font-weight: 400; 
             font-size: 1.6rem; 
@@ -246,11 +274,10 @@
             letter-spacing: 1px;
         }
 
-        /* BACK - אחורי (עיצוב מתהפך) */
         .service-card-back {
             transform: rotateY(180deg);
             background-color: #070709;
-            background-image: radial-gradient(circle at center, #1f1906, #070709); /* נגיעת זהב ברקע כהה */
+            background-image: radial-gradient(circle at center, #1f1906, #070709); 
             border: 2px solid #FBF5B7;
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
         }
@@ -279,7 +306,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* ======================================================= */
 
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .portfolio-card { background-color: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; overflow: hidden; transition: all 0.4s ease; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
@@ -311,7 +337,6 @@
 </head>
 <body>
 
-    <!-- מסך הטעינה -->
     <div id="site-loader">
         <div class="sound-wave">
             <div class="bar"></div>
@@ -323,17 +348,17 @@
         <div class="loader-text">טוען נתונים...</div>
     </div>
 
-    <!-- קנבס לאנימציית הזיקוקים -->
     <canvas id="magic-cursor-canvas"></canvas>
 
     <header>
         <nav>
             <a href="#home" class="logo" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">
-                <img id="headerLogo" src="" alt="לוגו" style="height: 110px; display: none;"> 
+                <img id="headerLogo" src="" alt="לוגו" style="height: 100px; display: none;"> 
                 <span id="headerLogoText">שניאור אייזנבך</span>
             </a>
             <ul class="nav-links">
-                <li><a href="#home">ראשי</a></li>
+                <!-- הגדרתי מחלקת active על 'ראשי' כדי שיידלק כברירת מחדל בהתחלה -->
+                <li><a href="#home" class="active">ראשי</a></li>
                 <li><a href="#services">שירותים</a></li>
                 <li><a href="#portfolio">תיק עבודות</a></li>
                 <li><a href="#contact">צור קשר</a></li>
@@ -351,7 +376,6 @@
         <h2 class="section-title">מעטפת של <span>מדיה ומוזיקה</span></h2>
         <div class="services-grid">
             
-            <!-- עיגול שירות 1: קלידים -->
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
@@ -366,7 +390,6 @@
                 </div>
             </div>
 
-            <!-- עיגול שירות 2: עריכת וידאו -->
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
@@ -381,7 +404,6 @@
                 </div>
             </div>
 
-            <!-- עיגול שירות 3: הנפשה ו-AI -->
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
@@ -419,6 +441,30 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
     <script>
+        // ==================== הגדרות Scroll Spy לתפריט ====================
+        const sections = document.querySelectorAll('section, footer');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                // הפחתת קצת גובה כדי שהתפריט יתחלף רגע לפני שמגיעים לאמצע המסך
+                if (window.scrollY >= (sectionTop - 250)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+
         // ==================== Firebase Config ====================
         const firebaseConfig = {
             apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
