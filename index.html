@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>שניאור אייזנבך | קלידן, מפיק מוזיקלי ועורך וידאו</title>
     
-    <!-- ייבוא נקי רק של גופן Heebo בכל המשקלים -->
+    <!-- ייבוא גופן Heebo -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap">
+    <!-- ייבוא ספריית אייקונים מקצועית -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     
@@ -40,34 +43,19 @@
            עיצוב מסך הטעינה (Loader) - אקולייזר סאונד
            ======================================================= */
         #site-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: var(--bg-dark);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999; 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-dark); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999; 
             transition: opacity 0.6s ease, visibility 0.6s ease;
         }
 
         .sound-wave {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            height: 80px; 
-            margin-bottom: 20px;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            height: 80px; margin-bottom: 20px;
         }
 
         .sound-wave .bar {
-            width: 10px;
-            height: 20px;
-            background: var(--gold-solid);
-            border-radius: 5px;
+            width: 10px; height: 20px; background: var(--gold-solid); border-radius: 5px;
             animation: soundJump 1.2s ease-in-out infinite;
         }
 
@@ -83,18 +71,12 @@
         }
 
         .loader-text {
-            font-size: 1.5rem;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-            letter-spacing: 1px;
+            font-size: 1.5rem; background: var(--gold-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900; letter-spacing: 1px;
         }
 
-        #site-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
+        #site-loader.hidden { opacity: 0; visibility: hidden; }
         /* ======================================================= */
 
         header {
@@ -148,7 +130,7 @@
         .section-title span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* =======================================================
-           כרטיסיות שירותים מתהפכות - עיגולים
+           כרטיסיות שירותים מתהפכות - קו נקי וזהב
            ======================================================= */
         .services-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 40px; }
         
@@ -174,6 +156,7 @@
             transform: rotateY(180deg);
         }
 
+        /* עיצוב אחיד לקדמי ואחורי - נקי ואלגנטי */
         .service-card-front, .service-card-back {
             position: absolute;
             width: 100%;
@@ -185,67 +168,55 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 30px;
+            background: #070709; /* רקע שחור נקי */
+            border: 2px solid var(--gold-solid); /* קו מתאר זהב חד */
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05); /* הילה עדינה מאוד */
             overflow: hidden;
         }
 
-        /* FRONT - חלק קדמי (רק מתאר אנימציה) */
-        .service-card-front {
-            background: var(--bg-dark);
+        /* אייקונים בצבע זהב */
+        .service-icon {
+            font-size: 3.5rem;
+            color: var(--gold-solid);
+            margin-bottom: 15px;
         }
 
-        .service-card-front::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(transparent 80%, var(--gold-solid) 100%);
-            animation: rotateBorder 3s linear infinite; z-index: 0;
-        }
-
-        .service-card-front::after {
-            content: ''; position: absolute; inset: 4px; 
-            background: #0f0a0c; 
-            border-radius: 50%; z-index: 1;
-        }
-
+        /* כותרת בקדמי */
         .service-card-front h3 { 
-            position: relative; z-index: 2;
-            font-weight: 700; font-size: 1.6rem; color: var(--gold-solid); margin: 0; 
+            font-weight: 400; /* משקל קל למראה נקי */
+            font-size: 1.6rem; 
+            color: var(--gold-solid); 
+            margin: 0; 
+            letter-spacing: 1px;
         }
 
-        /* BACK - חלק אחורי (צבע מלא) */
+        /* אחורי - עיצוב מתהפך */
         .service-card-back {
-            background: var(--gold-gradient);
-            color: #000;
             transform: rotateY(180deg);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.08), #070709); /* נגיעה קלה של זהב ברקע */
+            border-color: #FBF5B7; /* המסגרת קצת יותר בהירה בהיפוך */
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .service-card-back .service-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
 
         .service-card-back h3 { 
-            font-weight: 900; font-size: 1.5rem; color: #000; margin: 0 0 5px 0; 
+            font-weight: 700; 
+            font-size: 1.4rem; 
+            color: var(--gold-solid); 
+            margin: 0 0 10px 0; 
         }
 
         .service-card-back p { 
-            font-weight: 500; font-size: 1rem; color: #111; margin: 0; line-height: 1.4;
-        }
-
-        /* סגנון האימוג'ים */
-        .service-emoji {
-            font-size: 3rem;
-            position: relative;
-            z-index: 2;
-            margin-top: 10px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-        }
-
-        .service-card-back .service-emoji {
-            font-size: 2rem;
-            margin-top: 0;
-            margin-bottom: 8px;
-            filter: none;
-        }
-
-        @keyframes rotateBorder {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            font-weight: 300; 
+            font-size: 1rem; 
+            color: var(--text-light); 
+            margin: 0; 
+            line-height: 1.5;
         }
         /* ======================================================= */
 
@@ -279,7 +250,7 @@
 </head>
 <body>
 
-    <!-- מסך הטעינה (Loader) -->
+    <!-- מסך הטעינה -->
     <div id="site-loader">
         <div class="sound-wave">
             <div class="bar"></div>
@@ -291,7 +262,7 @@
         <div class="loader-text">טוען נתונים...</div>
     </div>
 
-    <!-- קנבס לאנימציית הזיקוקים וההילה העדינה -->
+    <!-- קנבס לאנימציית הזיקוקים -->
     <canvas id="magic-cursor-canvas"></canvas>
 
     <header>
@@ -323,11 +294,11 @@
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
+                        <i class="fas fa-keyboard service-icon"></i>
                         <h3>לייב על הבמה</h3>
-                        <div class="service-emoji">🎹</div>
                     </div>
                     <div class="service-card-back">
-                        <div class="service-emoji">🎹</div>
+                        <i class="fas fa-music service-icon"></i>
                         <h3>לייב על הבמה</h3>
                         <p>נגינה חיה אנרגטית ומדויקת על מערכות הקלידים המובילות בעולם.</p>
                     </div>
@@ -338,12 +309,12 @@
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
+                        <i class="fas fa-film service-icon"></i>
                         <h3>עריכה והפקות</h3>
-                        <div class="service-emoji">🎬</div>
                     </div>
                     <div class="service-card-back">
-                        <div class="service-emoji">🎬</div>
-                        <h3>עריכה והפקות וידאו</h3>
+                        <i class="fas fa-video service-icon"></i>
+                        <h3>עריכה והפקות</h3>
                         <p>עבודת פוסט-פרודקשן מוקפדת בתוכנות המובילות בתעשייה.</p>
                     </div>
                 </div>
@@ -353,12 +324,12 @@
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
+                        <i class="fas fa-robot service-icon"></i>
                         <h3>הנפשה ו-AI</h3>
-                        <div class="service-emoji">🤖</div>
                     </div>
                     <div class="service-card-back">
-                        <div class="service-emoji">🤖</div>
-                        <h3>הנפשה וכלי AI</h3>
+                        <i class="fas fa-wand-magic-sparkles service-icon"></i>
+                        <h3>הנפשה ו-AI</h3>
                         <p>קליפי מילים, עיצוב גרפי והנפשות מתקדמות בטכנולוגיית AI.</p>
                     </div>
                 </div>
