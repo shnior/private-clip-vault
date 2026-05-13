@@ -11,7 +11,6 @@
     
     <style>
         :root {
-            /* תוקן ה-var שהיה כאן בטעות */
             --bg-dark: #070709;
             --burgundy-deep: #1a0508; 
             --burgundy-accent: #7a1528; 
@@ -89,15 +88,15 @@
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
         
         /* =======================================================
-           חדש: כרטיסיות שירות עם מסגרת מונפשת (Animated Border)
+           כרטיסיות שירות עם מסגרת עבה מונפשת - מתוקן לאטום
            ======================================================= */
         .service-card {
             position: relative;
             padding: 50px 30px; 
             border-radius: 15px; 
             text-align: center;
-            overflow: hidden; /* חותך את הרקע המסתובב שלא יחרוג מהפינות */
-            background: var(--bg-dark); /* רקע בסיס מאחורי האנימציה */
+            overflow: hidden; 
+            background: var(--bg-dark); 
             transition: all 0.4s ease; 
         }
 
@@ -107,7 +106,7 @@
             z-index: 2;
         }
 
-        /* יצירת המעגל המסתובב ברקע (מעבר צבע חרוטי) */
+        /* יצירת המעגל המסתובב ברקע */
         .service-card::before {
             content: '';
             position: absolute;
@@ -115,18 +114,19 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(transparent 70%, var(--gold-solid) 100%);
+            /* צמצמתי טיפה את אורך "השובל" של האור למראה יותר אלגנטי */
+            background: conic-gradient(transparent 80%, var(--gold-solid) 100%);
             animation: rotateBorder 3s linear infinite;
             z-index: 0;
         }
 
-        /* יצירת הכרטיס הכהה הפנימי - משאיר מרווח של 2 פיקסלים מהקצוות למסגרת הזוהרת */
+        /* יצירת הכרטיס הכהה הפנימי - עכשיו אטום לחלוטין! */
         .service-card::after {
             content: '';
             position: absolute;
-            inset: 2px; /* עובי הקו שרץ מסביב */
-            background: var(--card-bg);
-            border-radius: 13px; /* מותאם לעיגול של המעטפת פחות עובי המסגרת */
+            inset: 4px; /* הגדלנו ל-4 פיקסלים למסגרת עבה יותר */
+            background: #0f0a0c; /* צבע אטום לחלוטין במקום שקוף, כדי להסתיר את הפנים */
+            border-radius: 11px; /* רדיוס מותאם (15 פחות 4 פיקסלים עובי) */
             z-index: 1;
             transition: all 0.4s ease;
         }
@@ -136,9 +136,9 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 10px 20px var(--burgundy-glow); 
         }
 
-        /* שינוי הצבע הפנימי בזמן ריחוף (כמו שהיה מוגדר במקור) */
+        /* שינוי הצבע הפנימי בזמן ריחוף (גם הוא חייב להיות אטום) */
         .service-card:hover::after {
-            background: rgba(30, 15, 20, 0.9); 
+            background: #1e0f14; 
         }
 
         @keyframes rotateBorder {
