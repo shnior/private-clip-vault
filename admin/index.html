@@ -166,11 +166,11 @@
             const disableUp = i === 0 ? "disabled" : "";
             const disableDown = i === portfolioItems.length - 1 ? "disabled" : "";
 
+            // שכבת המגן: שומרת על המשבצות תקינות גם כשמכניסים קוד HTML ארוך
             const safeTitle = (item.title || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const safeRole = (item.role || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const safeEmbed = (item.youtubeEmbed || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-            // הוספנו כאן oninput במקום onchange - מעדכן מיידית בכל אות!
             div.innerHTML = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end;">
                     <div>
@@ -182,8 +182,8 @@
                         <input type="text" value="${safeRole}" oninput="updateItem(${i}, 'role', this.value)" placeholder="למשל: עורך ראשי">
                     </div>
                     <div>
-                        <label>מזהה יוטיוב (אחרי v=)</label>
-                        <input type="text" id="yt-input-${i}" value="${safeEmbed}" oninput="updateItem(${i}, 'youtubeEmbed', this.value)" placeholder="לדוגמה: dQw4w9WgXcQ">
+                        <label>קוד הטמעה מיוטיוב (iframe)</label>
+                        <input type="text" id="yt-input-${i}" value="${safeEmbed}" oninput="updateItem(${i}, 'youtubeEmbed', this.value)" placeholder='<iframe src="...">'>
                     </div>
                 </div>
                 
@@ -220,34 +220,9 @@
         }
     }
 
-    function extractYouTubeID(url) {
-        if (!url) return "";
-        // מזהה כל קישור, מכל סוג (כולל קודי פריים מלאים) ומוציא רק את ה-ID
-        const match = url.match(/(?:v=|embed\/|youtu\.be\/|\/v\/|watch\?v=|&v=)([\w-]{11})/);
-        if (match) return match[1];
-        
-        // אם מראש הודבקו בדיוק 11 תווים, מחזיר אותם
-        if (url.trim().length === 11 && /^[\w-]{11}$/.test(url.trim())) {
-            return url.trim();
-        }
-        return url; 
-    }
-
+    // הפונקציה עודכנה לשמור את הטקסט בדיוק כפי שהוא ללא חיתוכים!
     function updateItem(index, field, value) {
-        if (field === 'youtubeEmbed') {
-            const extracted = extractYouTubeID(value);
-            portfolioItems[index][field] = extracted;
-            
-            // מעדכן את התיבה עצמה כדי שתראה את החיתוך בלייב רק אם באמת בוצע חיתוך
-            if (extracted !== value && extracted.length === 11) {
-                const inputElement = document.getElementById(`yt-input-${index}`);
-                if (inputElement) {
-                    inputElement.value = extracted;
-                }
-            }
-        } else {
-            portfolioItems[index][field] = value;
-        }
+        portfolioItems[index][field] = value;
     }
 
     function addPortfolioItemTop() {
