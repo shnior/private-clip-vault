@@ -11,7 +11,8 @@
     
     <style>
         :root {
-            var(--bg-dark): #070709;
+            /* תוקן ה-var שהיה כאן בטעות */
+            --bg-dark: #070709;
             --burgundy-deep: #1a0508; 
             --burgundy-accent: #7a1528; 
             --burgundy-glow: rgba(122, 21, 40, 0.5);
@@ -28,7 +29,7 @@
         body, html {
             margin: 0; padding: 0;
             font-family: 'Bona Nova', 'Google Sans', 'Heebo', sans-serif;
-            background-color: #070709;
+            background-color: var(--bg-dark);
             color: var(--text-light);
             scroll-behavior: smooth;
             line-height: 1.6;
@@ -57,7 +58,7 @@
 
         .hero {
             height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-            background: linear-gradient(to bottom, rgba(70, 10, 20, 0.6), #070709), 
+            background: linear-gradient(to bottom, rgba(70, 10, 20, 0.6), var(--bg-dark)), 
                         url('תמונה מאתר') center/cover;
             padding: 0 20px;
         }
@@ -81,17 +82,70 @@
         }
 
         .section { padding: 100px 20px; max-width: 1400px; margin: 0 auto; }
-        .section-alt { background: radial-gradient(circle at center, var(--burgundy-deep) 0%, #070709 80%); border-top: 1px solid rgba(122, 21, 40, 0.1); border-bottom: 1px solid rgba(122, 21, 40, 0.1); }
+        .section-alt { background: radial-gradient(circle at center, var(--burgundy-deep) 0%, var(--bg-dark) 80%); border-top: 1px solid rgba(122, 21, 40, 0.1); border-bottom: 1px solid rgba(122, 21, 40, 0.1); }
         .section-title { text-align: center; font-size: 3rem; margin-bottom: 60px; font-weight: 700; color: var(--text-light); }
         .section-title span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        
+        /* =======================================================
+           חדש: כרטיסיות שירות עם מסגרת מונפשת (Animated Border)
+           ======================================================= */
         .service-card {
-            background: var(--card-bg); padding: 50px 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.4s ease; text-align: center;
+            position: relative;
+            padding: 50px 30px; 
+            border-radius: 15px; 
+            text-align: center;
+            overflow: hidden; /* חותך את הרקע המסתובב שלא יחרוג מהפינות */
+            background: var(--bg-dark); /* רקע בסיס מאחורי האנימציה */
+            transition: all 0.4s ease; 
         }
-        .service-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 10px 20px var(--burgundy-glow); border-color: rgba(212, 175, 55, 0.2); background: rgba(30, 15, 20, 0.9); }
-        .service-card h3 { color: var(--gold-solid); font-size: 1.8rem; margin-top: 0; margin-bottom: 20px; }
-        .service-card p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin: 0; }
+
+        /* מרימים את כל התוכן הפנימי (טקסטים וכותרות) מעל הרקע */
+        .service-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* יצירת המעגל המסתובב ברקע (מעבר צבע חרוטי) */
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent 70%, var(--gold-solid) 100%);
+            animation: rotateBorder 3s linear infinite;
+            z-index: 0;
+        }
+
+        /* יצירת הכרטיס הכהה הפנימי - משאיר מרווח של 2 פיקסלים מהקצוות למסגרת הזוהרת */
+        .service-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px; /* עובי הקו שרץ מסביב */
+            background: var(--card-bg);
+            border-radius: 13px; /* מותאם לעיגול של המעטפת פחות עובי המסגרת */
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+
+        .service-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 10px 20px var(--burgundy-glow); 
+        }
+
+        /* שינוי הצבע הפנימי בזמן ריחוף (כמו שהיה מוגדר במקור) */
+        .service-card:hover::after {
+            background: rgba(30, 15, 20, 0.9); 
+        }
+
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* ======================================================= */
 
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .portfolio-card { background-color: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; overflow: hidden; transition: all 0.4s ease; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
@@ -287,7 +341,6 @@
             mouse.vx = mouse.x - mouse.lastX;
             mouse.vy = mouse.y - mouse.lastY;
 
-            // חישוב המרחק (העוצמה) - עד מקסימום 100 כדי למנוע השתגעות של הפיזור
             let distance = Math.hypot(mouse.vx, mouse.vy);
             let intensity = Math.min(distance, 100); 
             
@@ -297,11 +350,8 @@
                 let pX = mouse.lastX + (mouse.vx * (i / count));
                 let pY = mouse.lastY + (mouse.vy * (i / count));
                 
-                // הילה אחת רכה בנקודה הזו
                 particlesArray.push(new Particle('glow', pX, pY, mouse.vx, mouse.vy, intensity));
                 
-                // --- מנגנון מכפיל זיקוקים ---
-                // ככל שמזיזים חזק יותר, כמות הזיקוקים מוכפלת בענק! (עד 40 זיקוקים לכל נקודה שנוצרה)
                 let sparkAmount = Math.max(4, Math.floor(intensity * 0.4)); 
                 for(let j = 0; j < sparkAmount; j++) {
                     particlesArray.push(new Particle('spark', pX, pY, mouse.vx, mouse.vy, intensity));
@@ -309,7 +359,6 @@
             }
         });
 
-        // תמיכה למסכי מגע
         window.addEventListener('touchmove', (event) => {
             mouse.lastX = mouse.x || event.touches[0].clientX;
             mouse.lastY = mouse.y || event.touches[0].clientY;
@@ -337,7 +386,6 @@
                 let throwMultiplier = 1.0; 
 
                 if (this.type === 'glow') {
-                    // הילה עדינה שמתפשטת
                     this.size = Math.random() * 80 + 40; 
                     this.speedX = (vx * throwMultiplier * 0.2) + (Math.random() - 0.5) * 2; 
                     this.speedY = (vy * throwMultiplier * 0.2) + (Math.random() - 0.5) * 2; 
@@ -349,22 +397,11 @@
                 } 
                 else if (this.type === 'spark') {
                     this.size = Math.random() * 2.5 + 0.5; 
-                    
-                    // --- פיזור חכם לרוחב המבוסס על העוצמה ---
-                    // ככל שהעוצמה (intensity) גבוהה יותר, המרחב הרנדומלי שאליו הזיקוק עף נפתח יותר
-                    let spreadWidth = 6 + (intensity * 0.4); // העוצמה מרחיבה את זווית העיפה
-                    
-                    // הזיקוק מקבל חלק קטן מהמהירות קדימה (vx), והמון מהירות לפיזור הצדדי
+                    let spreadWidth = 6 + (intensity * 0.4); 
                     this.speedX = (vx * 0.3) + (Math.random() - 0.5) * spreadWidth; 
                     this.speedY = (vy * 0.3) + (Math.random() - 0.5) * spreadWidth;
-                    
-                    // חיכוך נמוך נותן להם לעוף רחוק יותר לפני שהם נעצרים
                     this.friction = 0.96;
-                    
-                    // כבידה עדינה שמושכת אותם למטה כמו זיקוקים אמיתיים
                     this.gravity = Math.random() * 0.15 + 0.02; 
-                    
-                    // זמן חיים משתנה כדי שלא כולם ייעלמו באותו רגע
                     this.lifeDecay = Math.random() * 0.015 + 0.005; 
                 }
             }
@@ -393,7 +430,7 @@
                 if (this.type === 'glow') {
                     ctx.globalCompositeOperation = 'screen';
                     const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-                    ctx.globalAlpha = Math.max(0, this.life); // מונע שגיאת שקיפות שלילית
+                    ctx.globalAlpha = Math.max(0, this.life); 
                     
                     gradient.addColorStop(0, `rgba(${this.colorRGB}, 0.12)`);
                     gradient.addColorStop(1, `rgba(${this.colorRGB}, 0)`);
