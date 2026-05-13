@@ -130,7 +130,7 @@
         .section-title span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* =======================================================
-           כרטיסיות שירותים מתהפכות - קו נקי וזהב
+           כרטיסיות שירותים מתהפכות - קו נקי מזהב ואנימציה
            ======================================================= */
         .services-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 40px; }
         
@@ -140,6 +140,12 @@
             height: 260px;
             perspective: 1000px; 
             cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.4, 0.2, 0.2, 1); /* הגדלה חלקה */
+        }
+
+        /* הגדלה ב-10% בזמן ריחוף */
+        .service-card:hover {
+            transform: scale(1.1);
         }
 
         .service-card-inner {
@@ -156,7 +162,7 @@
             transform: rotateY(180deg);
         }
 
-        /* עיצוב אחיד לקדמי ואחורי - נקי ואלגנטי */
+        /* עיצוב אחיד לקדמי ואחורי */
         .service-card-front, .service-card-back {
             position: absolute;
             width: 100%;
@@ -169,10 +175,31 @@
             justify-content: center;
             align-items: center;
             padding: 30px;
-            background: #070709; /* רקע שחור נקי */
-            border: 2px solid var(--gold-solid); /* קו מתאר זהב חד */
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05); /* הילה עדינה מאוד */
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05); 
             overflow: hidden;
+        }
+
+        /* FRONT - חלק קדמי (עם אנימציית סיבוב זהב) */
+        .service-card-front {
+            background: transparent;
+        }
+
+        .service-card-front::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent 80%, var(--gold-solid) 100%);
+            animation: rotateBorder 3s linear infinite; z-index: 0;
+        }
+
+        .service-card-front::after {
+            content: ''; position: absolute; inset: 3px; /* עובי המסגרת המסתובבת */
+            background: #070709; 
+            border-radius: 50%; z-index: 1;
+        }
+
+        /* דחיפת הטקסטים והאייקונים מעל מסגרת האנימציה */
+        .service-card-front .service-icon,
+        .service-card-front h3 {
+            position: relative; z-index: 2;
         }
 
         /* אייקונים בצבע זהב */
@@ -184,18 +211,19 @@
 
         /* כותרת בקדמי */
         .service-card-front h3 { 
-            font-weight: 400; /* משקל קל למראה נקי */
+            font-weight: 400; 
             font-size: 1.6rem; 
             color: var(--gold-solid); 
             margin: 0; 
             letter-spacing: 1px;
         }
 
-        /* אחורי - עיצוב מתהפך */
+        /* BACK - אחורי (עיצוב מתהפך) */
         .service-card-back {
             transform: rotateY(180deg);
-            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.08), #070709); /* נגיעה קלה של זהב ברקע */
-            border-color: #FBF5B7; /* המסגרת קצת יותר בהירה בהיפוך */
+            background-color: #070709;
+            background-image: radial-gradient(circle at center, #1f1906, #070709); /* נגיעת זהב ברקע כהה */
+            border: 2px solid #FBF5B7;
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
         }
 
@@ -217,6 +245,11 @@
             color: var(--text-light); 
             margin: 0; 
             line-height: 1.5;
+        }
+
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         /* ======================================================= */
 
@@ -294,7 +327,7 @@
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
-                        <i class="fas fa-keyboard service-icon"></i>
+                        <i class="fas fa-music service-icon"></i>
                         <h3>לייב על הבמה</h3>
                     </div>
                     <div class="service-card-back">
@@ -309,7 +342,7 @@
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
-                        <i class="fas fa-film service-icon"></i>
+                        <i class="fas fa-video service-icon"></i>
                         <h3>עריכה והפקות</h3>
                     </div>
                     <div class="service-card-back">
@@ -324,7 +357,7 @@
             <div class="service-card">
                 <div class="service-card-inner">
                     <div class="service-card-front">
-                        <i class="fas fa-robot service-icon"></i>
+                        <i class="fas fa-wand-magic-sparkles service-icon"></i>
                         <h3>הנפשה ו-AI</h3>
                     </div>
                     <div class="service-card-back">
