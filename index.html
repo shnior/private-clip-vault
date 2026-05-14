@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>שניאור אייזנבך האתר הרשמי| קלידן, מפיק מוזיקלי ועורך וידאו</title>
     
-    <!-- ייבוא ספריית אייקונים מקצועית -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
@@ -45,7 +44,7 @@
 
         body, html {
             margin: 0; padding: 0;
-            font-family: 'Tel Aviv', sans-serif;
+            font-family: 'Google Sans', 'Tel Aviv', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-light);
             scroll-behavior: smooth;
@@ -155,7 +154,7 @@
             top: 20vh;
             height: 70vh;
             width: 2px;
-            z-index: 2; /* שכבה 2: מעל הרקע, מתחת לטקסט */
+            z-index: 2;
             pointer-events: none;
             display: flex;
             justify-content: center;
@@ -190,7 +189,7 @@
 
         .timeline-arrow i {
             color: var(--gold-solid);
-            font-size: 2.5rem; /* גודל חיצים מוגדל */
+            font-size: 2.5rem;
             text-shadow: 0 0 10px var(--gold-solid);
             display: block;
         }
@@ -358,7 +357,7 @@
             color: var(--gold-solid);
             border: 1px solid var(--gold-solid);
             padding: 10px 20px;
-            font-family: 'Tel Aviv', sans-serif;
+            font-family: inherit;
             font-size: 1.1rem;
             border-radius: 30px;
             cursor: pointer;
@@ -433,9 +432,8 @@
 
         /* סידור שכבות (z-index) היררכי */
         #magic-cursor-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; }
-        .hero, .section, .section-alt, footer { position: relative; z-index: 1; } /* שכבה 1: הרקעים של האזורים */
-        /* ה-scroll-timeline-container מקבל z-index: 2 כפי שהוגדר למעלה */
-        .hero h1, .hero h2, .cta-btn, .section-title, .service-card, .portfolio-card, .footer-logo, .contact-info, .pagination-controls { position: relative; z-index: 3; } /* שכבה 3: כל הטקסטים והאלמנטים החשובים מעל ציר הזמן */
+        .hero, .section, .section-alt, footer { position: relative; z-index: 1; }
+        .hero h1, .hero h2, .cta-btn, .section-title, .service-card, .portfolio-card, .footer-logo, .contact-info, .pagination-controls { position: relative; z-index: 3; }
     </style>
 </head>
 <body>
@@ -451,7 +449,6 @@
         <div class="loader-text">טוען נתונים...</div>
     </div>
 
-    <!-- ציר זמן זהב מצד שמאל (מעודכן עם 3 חיצים גדולים) -->
     <div class="scroll-timeline-container">
         <div class="timeline-track"></div>
         <div class="timeline-progress" id="timeline-progress"></div>
@@ -468,8 +465,7 @@
         <nav>
             <a href="#home" class="logo" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">
                 <img id="headerLogo" src="" alt="לוגו" style="height: 100px; display: none;"> 
-               
-            </a>
+                <span id="headerLogoText"></span> </a>
             <ul class="nav-links">
                 <li><a href="#home" class="active">ראשי</a></li>
                 <li><a href="#services">שירותים</a></li>
@@ -537,10 +533,8 @@
     <section id="portfolio" class="section">
         <h2 class="section-title">פרויקטים <span>נבחרים</span></h2>
         <div class="portfolio-grid" id="portfolio-grid">
-            <!-- התוכן ייטען לכאן דינמית -->
-        </div>
+            </div>
         
-        <!-- כפתורי דפדוף يתווספו לכאן -->
         <div class="pagination-controls">
             <button id="prev-page" class="page-btn" disabled><i class="fas fa-arrow-right"></i> הקודם</button>
             <span id="page-info" class="page-info">עמוד 1</span>
@@ -549,8 +543,7 @@
     </section>
 
     <footer id="contact">
-        <div class="footer-logo">שניאור אייזנבך</div>
-        <div class="contact-info">
+        <div class="footer-logo"></div> <div class="contact-info">
             <strong>זמין לאירועי בוטיק, חתונות והפקות סטודיו.</strong>
             אזור פעילות: כל הארץ
         </div>
@@ -564,7 +557,7 @@
         // ==================== אנימציית ציר זמן (Timeline Scroll) ====================
         const timelineProgress = document.getElementById('timeline-progress');
         const timelineArrow = document.getElementById('timeline-arrow');
-        const arrowIcons = timelineArrow.querySelectorAll('i'); // בחירת 3 החיצים
+        const arrowIcons = timelineArrow.querySelectorAll('i');
         let lastScrollTop = 0;
 
         window.addEventListener('scroll', () => {
@@ -572,19 +565,13 @@
             let docHeight = document.documentElement.scrollHeight - window.innerHeight;
             let scrollPercent = (scrollTop / docHeight) * 100;
             
-            // עדכון גובה הפס ומיקום קבוצת החיצים
             timelineProgress.style.height = scrollPercent + '%';
             timelineArrow.style.top = scrollPercent + '%';
 
-            // שינוי כיוון לכל החיצים יחד
             if (scrollTop > lastScrollTop) {
-                arrowIcons.forEach(icon => {
-                    icon.className = 'fas fa-caret-down';
-                });
+                arrowIcons.forEach(icon => icon.className = 'fas fa-caret-down');
             } else {
-                arrowIcons.forEach(icon => {
-                    icon.className = 'fas fa-caret-up';
-                });
+                arrowIcons.forEach(icon => icon.className = 'fas fa-caret-up');
             }
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
         });
@@ -611,8 +598,7 @@
             });
         });
 
-
-        // ==================== Firebase Config ====================
+        // ==================== Firebase Config & Data Loading ====================
         const firebaseConfig = {
             apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
             authDomain: "shnior-studio.firebaseapp.com",
@@ -622,15 +608,16 @@
             messagingSenderId: "163064507259",
             appId: "1:163064507259:web:3fb46c6795eba5b84f6bde"
         };
-        firebase.initializeApp(firebaseConfig);
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
 
         let allPlayers = [];
-        
-        // ==================== משתני דפדוף תיק עבודות ====================
         let fullPortfolioData = [];
         let currentPage = 0;
-        const itemsPerPage = 8; // מספר הסרטונים לעמוד
+        const itemsPerPage = 8;
 
         function renderPortfolioPage() {
             const portfolioGrid = document.getElementById('portfolio-grid');
@@ -662,9 +649,7 @@
                         allPlayers.push(player);
                         player.on('play', () => {
                             allPlayers.forEach(otherPlayer => {
-                                if (otherPlayer !== player) {
-                                    otherPlayer.pause(); 
-                                }
+                                if (otherPlayer !== player) otherPlayer.pause(); 
                             });
                         });
 
@@ -685,15 +670,13 @@
                 portfolioGrid.appendChild(card);
             });
 
-            // עדכון מצב הכפתורים
             const totalPages = Math.ceil(fullPortfolioData.length / itemsPerPage);
             document.getElementById('page-info').textContent = `עמוד ${currentPage + 1} מתוך ${totalPages || 1}`;
             
             document.getElementById('prev-page').disabled = currentPage === 0;
-            document.getElementById('next-page').disabled = currentPage >= totalPages - 1;
+            document.getElementById('next-page').disabled = currentPage >= totalPages - 1 || totalPages === 0;
         }
 
-        // מאזינים לכפתורי דפדוף
         document.getElementById('prev-page').addEventListener('click', () => {
             if (currentPage > 0) {
                 currentPage--;
@@ -712,6 +695,7 @@
         });
 
         function loadDynamicContent() {
+            // הוספת callback לשגיאות כדי למנוע היתקעות של ה-Loader
             db.ref('siteContent').on('value', (snapshot) => {
                 const data = snapshot.val();
                 
@@ -725,13 +709,29 @@
                     return;
                 }
 
-                if (data.logoText) document.querySelectorAll('#headerLogoText, .footer-logo').forEach(el => el.textContent = data.logoText);
+                // עדכון טקסט הלוגו בצורה תקינה
+                if (data.logoText) {
+                    const headerLogoText = document.getElementById('headerLogoText');
+                    if(headerLogoText) headerLogoText.textContent = data.logoText;
+                    
+                    const footerLogo = document.querySelector('.footer-logo');
+                    if(footerLogo) footerLogo.textContent = data.logoText;
+                }
+                
+                // עדכון תמונת הלוגו
                 const logoImg = document.getElementById('headerLogo');
-                if (data.logoBase64) { logoImg.src = data.logoBase64; logoImg.style.display = 'block'; } 
-                else { logoImg.style.display = 'none'; }
+                if (data.logoBase64) { 
+                    logoImg.src = data.logoBase64; 
+                    logoImg.style.display = 'block'; 
+                } else { 
+                    logoImg.style.display = 'none'; 
+                }
+                
+                // עדכון תוכן ראשי
                 if (data.heroTitle) document.querySelector('.hero h1').textContent = data.heroTitle;
                 if (data.heroSubtitle) document.querySelector('.hero h2').textContent = data.heroSubtitle;
 
+                // עדכון תיק עבודות
                 if (data.portfolio) {
                     fullPortfolioData = Array.isArray(data.portfolio) ? data.portfolio : Object.values(data.portfolio);
                     fullPortfolioData = fullPortfolioData.filter(item => item !== null);
@@ -741,8 +741,13 @@
                 }
 
                 hideLoader();
+            }, (error) => {
+                console.error("שגיאה במשיכת נתונים מ-Firebase:", error);
+                const loader = document.getElementById('site-loader');
+                if (loader) loader.classList.add('hidden');
             });
         }
+        
         window.addEventListener('DOMContentLoaded', loadDynamicContent);
 
         // ==================== אנימציה: מאות זיקוקים מתפזרים ====================
