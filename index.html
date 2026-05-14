@@ -768,6 +768,26 @@
             z-index: 3;
         }
         /* שכבה 3: כל הטקסטים והאלמנטים החשובים מעל ציר הזמן */
+
+        /* =======================================================
+           פס קרדיט תחתון
+        ======================================================= */
+        .site-credit {
+            background-color: #030102; /* שחור-בורדו עמוק שמתמזג עם הפוטר */
+            color: var(--text-muted);
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 3;
+            border-top: 1px solid rgba(212, 175, 55, 0.1); /* קו זהב עדין להפרדה */
+        }
+
+        .site-credit span {
+            color: var(--gold-solid);
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -917,6 +937,11 @@
         </div>
         <a href="https://wa.me/972548528425" target="_blank" class="cta-btn footer-cta"><i class="fab fa-whatsapp"></i> שלח הודעת וואטסאפ</a>
     </footer>
+
+    <!-- פס קרדיט בתחתית האתר -->
+    <div class="site-credit">
+        עיצוב ופיתוח: <span>שניאור אייזנבך</span>
+    </div>
 
     <!-- ייבוא פיירבייס מופיע רק פעם אחת -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
