@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
@@ -28,7 +30,7 @@
         h1 { color: var(--primary); text-align: center; font-size: 2.5rem; margin-bottom: 20px; }
 
         /* כפתור שמירה עליון */
-        .top-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; }
 
         .section { background: var(--card-bg); padding: 30px; border-radius: 16px; margin-bottom: 30px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .section-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
@@ -41,6 +43,8 @@
         .btn { background: var(--primary); color: #000; padding: 12px 25px; font-size: 1rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
         .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
         .btn-save-top { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .btn-logout { background: #ff4d4d; color: white; padding: 8px 16px; font-size: 0.9rem; }
+        .btn-logout:hover { background: #cc0000; color: white; }
 
         /* עיצוב התחברות */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); display: flex; justify-content: center; align-items: center; z-index: 3000; }
@@ -59,15 +63,15 @@
 </head>
 <body>
 
-<!-- מסך כניסה -->
 <div id="loginOverlay">
     <div class="login-card">
         <i class="fas fa-lock"></i>
         <h2 style="color: var(--primary);">כניסת מנהל</h2>
-        <p style="color: var(--text-muted);">הזן סיסמה כדי להמשיך</p>
+        <p style="color: var(--text-muted);">הזן פרטי התחברות כדי להמשיך</p>
+        <input type="email" id="emailInput" placeholder="אימייל..." style="text-align: center; margin-bottom: 15px;">
         <input type="password" id="passInput" placeholder="סיסמה..." style="text-align: center; margin-bottom: 20px;">
         <button class="btn" style="width: 100%; justify-content: center;" onclick="checkLogin()">כניסה למערכת</button>
-        <p id="loginError" style="color: #ff4d4d; margin-top: 15px; display: none;">סיסמה שגויה, נסה שוב.</p>
+        <p id="loginError" style="color: #ff4d4d; margin-top: 15px; display: none; font-size: 0.9rem;"></p>
     </div>
 </div>
 
@@ -75,6 +79,9 @@
 
 <div class="container" id="mainContainer">
     <div class="top-bar">
+        <button class="btn btn-logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> התנתק
+        </button>
         <button class="btn btn-save-top" onclick="saveAllContent()">
             <i class="fas fa-save"></i> שמירה מהירה
         </button>
@@ -82,7 +89,6 @@
 
     <h1>🛠 מנהל תוכן מקצועי</h1>
 
-    <!-- מיתוג -->
     <div class="section">
         <div class="section-header">
             <h2><i class="fas fa-id-card"></i> מיתוג ולוגו</h2>
@@ -99,7 +105,6 @@
         </div>
     </div>
 
-    <!-- Hero -->
     <div class="section">
         <div class="section-header">
             <h2><i class="fas fa-home"></i> מסך ראשי (Hero)</h2>
@@ -110,7 +115,6 @@
         <textarea id="heroSubtitle" rows="2" placeholder="קלידן, מפיק מוזיקלי, עורך וידאו ואנימטור"></textarea>
     </div>
 
-    <!-- תיק עבודות -->
     <div class="section">
         <div class="section-header">
             <h2><i class="fas fa-film"></i> תיק עבודות</h2>
@@ -145,28 +149,6 @@
 <div id="toast">✅ השינויים נשמרו בהצלחה!</div>
 
 <script>
-    // הגדרות אבטחה בסיסיות
-    const ADMIN_PASSWORD = "8425"; // שנה את זה לסיסמה שאתה רוצה!
-
-    function checkLogin() {
-        const input = document.getElementById('passInput').value;
-        const error = document.getElementById('loginError');
-        
-        if(input === ADMIN_PASSWORD) {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainContainer').style.display = 'block';
-            loadExistingData();
-        } else {
-            error.style.display = 'block';
-            document.getElementById('passInput').value = '';
-        }
-    }
-
-    // מאפשר לחיצה על Enter לכניסה
-    document.getElementById('passInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') checkLogin();
-    });
-
     const firebaseConfig = {
         apiKey: "AIzaSyA_AHhjzcAYeVoBNEwF5mlzsvUqbnw2maY",
         authDomain: "shnior-studio.firebaseapp.com",
@@ -176,7 +158,70 @@
     
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const auth = firebase.auth(); // אתחול מערכת האימות
     let portfolioItems = [];
+
+    // מאזין למצב התחברות - מפעיל או מסתיר את המערכת אוטומטית
+    auth.onAuthStateChanged((user) => {
+        const loginOverlay = document.getElementById('loginOverlay');
+        const mainContainer = document.getElementById('mainContainer');
+        
+        if (user) {
+            // המשתמש מחובר!
+            loginOverlay.style.display = 'none';
+            mainContainer.style.display = 'block';
+            loadExistingData(); // נטען נתונים רק עכשיו
+        } else {
+            // המשתמש מנותק
+            loginOverlay.style.display = 'flex';
+            mainContainer.style.display = 'none';
+        }
+    });
+
+    function checkLogin() {
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passInput').value;
+        const error = document.getElementById('loginError');
+        
+        error.style.display = 'none'; // איפוס שגיאה
+
+        if(!email || !password) {
+            error.textContent = "נא להזין אימייל וסיסמה.";
+            error.style.display = 'block';
+            return;
+        }
+
+        // בקשת התחברות לפיירבייס
+        auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
+                // הצלחה! אין צורך לעשות כאן כלום, ה-onAuthStateChanged יטפל בשאר
+                document.getElementById('emailInput').value = '';
+                document.getElementById('passInput').value = '';
+            })
+            .catch((err) => {
+                // במקרה של שגיאה (סיסמה שגויה, משתמש לא קיים וכו')
+                if(err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+                    error.textContent = "פרטי התחברות שגויים, נסה שוב.";
+                } else {
+                    error.textContent = "שגיאה: " + err.message;
+                }
+                error.style.display = 'block';
+            });
+    }
+
+    function logout() {
+        auth.signOut().catch((err) => {
+            alert("שגיאה בהתנתקות: " + err.message);
+        });
+    }
+
+    // מאפשר לחיצה על Enter לכניסה גם משדה האימייל וגם משדה הסיסמה
+    document.getElementById('passInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkLogin();
+    });
+    document.getElementById('emailInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkLogin();
+    });
 
     function loadExistingData() {
         db.ref('siteContent').once('value', (snapshot) => {
