@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>שניאור אייזנבך | קלידן, מפיק מוזיקלי ועורך וידאו</title>
     
-    <!-- ייבוא גופן Heebo -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap">
     <!-- ייבוא ספריית אייקונים מקצועית -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -15,6 +13,21 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     
     <style>
+        /* === ייבוא גופן תל אביב מקבצים מקומיים === */
+        @font-face {
+            font-family: 'Tel Aviv';
+            src: url('TelAviv-ModernistRegular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Tel Aviv';
+            src: url('TelAviv-ModernistBold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
         :root {
             --bg-dark: #070709;
             --burgundy-deep: #1a0508; 
@@ -32,7 +45,7 @@
 
         body, html {
             margin: 0; padding: 0;
-            font-family: 'Heebo', sans-serif;
+            font-family: 'Tel Aviv', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-light);
             scroll-behavior: smooth;
@@ -203,7 +216,7 @@
             filter: drop-shadow(0px 4px 15px rgba(0,0,0,0.8));
         }
 
-        .hero h2 { font-size: 2rem; color: var(--text-light); font-weight: 300; margin-bottom: 40px; text-shadow: 2px 2px 15px rgba(0,0,0,0.9); }
+        .hero h2 { font-size: 2rem; color: var(--text-light); font-weight: 400; margin-bottom: 40px; text-shadow: 2px 2px 15px rgba(0,0,0,0.9); }
 
         .cta-btn {
             background: transparent; color: var(--gold-solid); border: 2px solid var(--gold-solid);
@@ -304,7 +317,7 @@
 
         .service-card-back .service-icon { font-size: 2rem; margin-bottom: 10px; }
         .service-card-back h3 { font-weight: 700; font-size: 1.4rem; color: var(--gold-solid); margin: 0 0 10px 0; }
-        .service-card-back p { font-weight: 300; font-size: 1rem; color: var(--text-light); margin: 0; line-height: 1.5; }
+        .service-card-back p { font-weight: 400; font-size: 1rem; color: var(--text-light); margin: 0; line-height: 1.5; }
 
         @keyframes rotateBorder {
             0% { transform: rotate(0deg); }
@@ -345,7 +358,7 @@
             color: var(--gold-solid);
             border: 1px solid var(--gold-solid);
             padding: 10px 20px;
-            font-family: 'Heebo', sans-serif;
+            font-family: 'Tel Aviv', sans-serif;
             font-size: 1.1rem;
             border-radius: 30px;
             cursor: pointer;
@@ -402,7 +415,7 @@
             color: var(--text-light); 
             margin-bottom: 50px; 
             line-height: 2; 
-            font-weight: 300; 
+            font-weight: 400; 
         }
         
         .contact-info strong { 
